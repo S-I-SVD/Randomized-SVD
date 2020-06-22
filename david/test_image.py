@@ -66,7 +66,7 @@ def svd_cumsum_plot(mat):
     plt.plot(1 + np.arange(s.size), [sum(s[0:i]) for i in range(0,s.size)] / sum(s), 'ro')
     plt.show()
 
-display_svd(np.asarray(Image.open('raccoon.jpg')))
+display_svd(np.asarray(Image.open('res/raccoon.jpg')))
 #time_them()
 #svd_cumsum_plot(img_stacked)
 

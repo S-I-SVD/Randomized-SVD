@@ -1,11 +1,14 @@
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 import skvideo as vid
 import skvideo.io
 import skvideo.utils
 
+
 # Load video
-video = vid.utils.rgb2gray(vid.io.vread('school_smol.mp4'))
+video = vid.utils.rgb2gray(vid.io.vread('res/school_smol.mp4'))
 video_shape = video.shape
 num_frames = video_shape[0]
 print('video loaded %s' % (video.shape,))
