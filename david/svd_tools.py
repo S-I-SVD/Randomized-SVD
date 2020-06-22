@@ -46,17 +46,13 @@ def compress_image(img, ratio=None, rank=None, randomized=False, oversample=0):
     
     # Stack color channels
     rows, columns = img.shape[:2] 
-    print('img shape = (%d, %d)' % (rows, columns))
     img_stacked = img.reshape(-1, columns)
     img_rank = np.linalg.matrix_rank(img_stacked)
-    print('img rank = %d' % img_rank)
 
     if(rank == None):
         if(ratio == None):
             raise Exception('compress_image must be passed either rank or ratio')
         rank = int(ratio * img_rank)
-
-    print('new rank is %d' % rank)
 
     # Compute rank <rank> approximation of image
     img_approx_stacked = rank_k_approx(img_stacked, rank=rank, 
