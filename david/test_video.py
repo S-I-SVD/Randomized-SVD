@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.linalg as la
 
 import matplotlib.pyplot as plt
 
@@ -6,16 +7,16 @@ import skvideo as vid
 import skvideo.io
 import skvideo.utils
 
+import svd_tools as svd
 
 # Load video
-video = vid.utils.rgb2gray(vid.io.vread('res/school_smol.mp4'))
-video_shape = video.shape
-num_frames = video_shape[0]
-print('video loaded %s' % (video.shape,))
+video = vid.io.vread('res/school2.mp4')
 
-video_flattened = video.reshape(-1, num_frames)
-print('video flattened %s' % (video_flattened.shape,))
-plt.imshow(video_flattened)
-plt.axis('off')
+# Compress video
+video_compressed = svd.compress_video(video, ratio=.2, randomized=True, oversample=10)
+
+# Save compressed video
+vid.io.vwrite('out/school2_compressed.mp4', video_compressed)
+
+plt.imshow(video_compressed[0])
 plt.show()
-
