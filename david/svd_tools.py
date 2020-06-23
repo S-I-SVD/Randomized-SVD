@@ -42,8 +42,7 @@ Compresses an image using a low rank approximation. Takes in either the rank of 
 '''
 def compress_image(img, ratio=None, rank=None, randomized=False, oversample=0):
     img_type = img.dtype
-    img = img.astype('float32')
-    
+        
     # Stack color channels
     rows, columns = img.shape[:2] 
     img_stacked = img.reshape(-1, columns)
@@ -57,9 +56,30 @@ def compress_image(img, ratio=None, rank=None, randomized=False, oversample=0):
     # Compute rank <rank> approximation of image
     img_approx_stacked = rank_k_approx(img_stacked, rank=rank, 
             oversample=oversample, randomized=randomized)
-    img_approx = img_approx_stacked.reshape(rows, columns, -1) / 255
+    img_approx = img_approx_stacked.reshape(rows, columns, -1)
 
-    return img_approx
+    # Handle overflow/underflow issues
+    if np.issubdtype(img_type, np.integer):
+        img_approx = np.clip(img_approx, 0, 255)
+    else:
+        img_approx = np.clip(img_approx, 0, 1)
+
+    return img_approx.astype(img_type)
+
+'''
+Compresses a video using a low rank approximation. Takes in either the rank of the approximation or the compression ratio.
+'''
+def compress_video(video, ratio=None, rank=None, randomized=False, oversample=0):
+    video_shape = video.shape
+    num_frames = video_shape[0]
+
+    video_flattened = video.reshape(-1, num_frames)
+    video_flattened_approx = compress_image(video_flattened, 
+            ratio=ratio, rank=rank, randomized=randomized, oversample=oversample)
+
+    video_approx = video_flattened_approx.reshape(video_shape)
+
+    return video_approx
 
 '''
 Displays a log-plot of the singular values of the input matrix
