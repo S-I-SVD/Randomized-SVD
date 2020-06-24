@@ -7,7 +7,7 @@ from timeit import timeit
 '''
 Computes the randomized singular value decomposition of the input matrix.
 '''
-def randomized_svd(matrix, rank, oversample=0, full_matrices = False):
+def randomized_svd(matrix, rank, oversample=0, power_iterations = 0, full_matrices = False):
     rows, columns = matrix.shape
 
     # Create a random projection matrix
@@ -15,6 +15,10 @@ def randomized_svd(matrix, rank, oversample=0, full_matrices = False):
 
     # Sample from the column space of X
     sample = matrix @ projector
+
+    # Perform power iteration
+    for i in range(0, power_iterations):
+        sample = matrix @ (matrix.T @ sample)
 
     orthogonal, r = np.linalg.qr(sample)
 
@@ -30,18 +34,19 @@ def randomized_svd(matrix, rank, oversample=0, full_matrices = False):
 '''
 Computes a rank <rank> approximation of a matrix with optional oversampling and randomization 
 '''
-def rank_k_approx(mat, rank, randomized=False, oversample=0):
+def rank_k_approx(mat, rank, randomized=False, oversample=0, power_iterations=0):
     if (not randomized):
         u,s,vh = np.linalg.svd(mat, full_matrices=False)
     else:
-        u,s,vh = randomized_svd(mat, rank=rank, oversample=oversample, full_matrices=False)
+        u,s,vh = randomized_svd(mat, rank=rank, oversample=oversample, 
+                power_iterations=power_iterations, full_matrices=False)
 
     return u[:, :rank] @ np.diag(s[:rank]) @ vh[:rank, :]
 
 '''
 Compresses an image using a low rank approximation. Takes in either the rank of the approximation or the compression ratio.
 '''
-def compress_image(img, ratio=None, rank=None, randomized=False, oversample=0):
+def compress_image(img, ratio=None, rank=None, randomized=False, oversample=0, power_iterations=0):
     img_type = img.dtype
         
     # Stack color channels
@@ -56,7 +61,7 @@ def compress_image(img, ratio=None, rank=None, randomized=False, oversample=0):
 
     # Compute rank <rank> approximation of image
     img_approx_stacked = rank_k_approx(img_stacked, rank=rank, 
-            oversample=oversample, randomized=randomized)
+            oversample=oversample, randomized=randomized, power_iterations=power_iterations)
     img_approx = img_approx_stacked.reshape(rows, columns, -1)
 
     # Get rid of redundant dimensions
