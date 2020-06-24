@@ -123,13 +123,10 @@ def regcompressmatrix(M, k):
 def regcompressvideo(M, k):
     M_shape = M.shape
     frames = M_shape[0]
-    M_flat = M.reshape(-1, frames)
+    M_flat = M.reshape(frames, -1)
     M_flat_approx = regcompressmatrix(M,k)
     M_approx_video = M_flat_approx.reshape(M_shape)
     return M_approx_video
-
-img2 = imagestack(img)
-a = singularvalueplot(img2)
 
 
 
