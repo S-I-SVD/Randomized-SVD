@@ -11,10 +11,11 @@ import skvideo as vid
 import skvideo.io
 import skvideo.utils
 
-
+'''
 # set wd
 import os
 os. chdir('..\Week 3')
+'''
 
 # svd algorithm
 def rand_svd(X,r,q,p):
@@ -33,6 +34,8 @@ def rand_svd(X,r,q,p):
 # Load video
 video = vid.io.vread('school.mp4')
 
+'''
+# color separated
 # separate colors
 vshape = video.shape
 red = video[:,:,:,0]
@@ -41,9 +44,9 @@ blue = video[:,:,:,2]
 
 # reshape
 num = vshape[0]
-red_flat = red.reshape(num,-1)
-green_flat = green.reshape(num,-1)
-blue_flat = blue.reshape(num,-1)
+red_flat = red.reshape(-1,num)
+green_flat = green.reshape(-1,num)
+blue_flat = blue.reshape(-1,num)
 
 # apply SVD
 r = 5
@@ -53,6 +56,19 @@ approx = np.empty(shape=(red_flat.shape[0], red_flat.shape[1],3))
 approx[:,:,0]=rand_svd(red_flat, r, q, p)
 approx[:,:,1]=rand_svd(green_flat, r, q, p)
 approx[:,:,2]=rand_svd(blue_flat, r, q, p)
+'''
+
+# reshape
+vshape = video.shape
+num = vshape[0]
+flat = video.reshape(num,-1)
+
+# apply SVD
+r = 5
+q = 1
+p = 3
+approx = rand_svd(flat, r, q, p)
+
 
 # reconstruct video
 vapprox = approx.reshape(vshape)
