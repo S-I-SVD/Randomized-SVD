@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.linalg as la
 import matplotlib.pyplot as plt
 
 from timeit import timeit
@@ -58,6 +59,10 @@ def compress_image(img, ratio=None, rank=None, randomized=False, oversample=0):
             oversample=oversample, randomized=randomized)
     img_approx = img_approx_stacked.reshape(rows, columns, -1)
 
+    # Get rid of redundant dimensions
+    if img_approx.shape[2] == 1:
+        img_approx.shape = img_approx.shape[:2]
+
     # Handle overflow/underflow issues
     if np.issubdtype(img_type, np.integer):
         img_approx = np.clip(img_approx, 0, 255)
@@ -73,9 +78,13 @@ def compress_video(video, ratio=None, rank=None, randomized=False, oversample=0)
     video_shape = video.shape
     num_frames = video_shape[0]
 
-    video_flattened = video.reshape(-1, num_frames)
+    video_flattened = video.reshape(num_frames, -1)
+    print('video_flattened.rank = %d' % la.matrix_rank(video_flattened))
+    print('video_flattened.shape = %s' % (video_flattened.shape,))
     video_flattened_approx = compress_image(video_flattened, 
             ratio=ratio, rank=rank, randomized=randomized, oversample=oversample)
+    print('video_flattened_approx.shape = %s' % (video_flattened_approx.shape,))
+    print('video_flattened_approx.rank = %d' % la.matrix_rank(video_flattened_approx))
 
     video_approx = video_flattened_approx.reshape(video_shape)
 
