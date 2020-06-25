@@ -32,7 +32,7 @@ def rand_svd(X,r,q,p):
     return approx
 
 # Load video
-video = vid.io.vread('school.mp4')
+video = vid.io.vread('school_full.mp4')
 
 '''
 # color separated
@@ -44,9 +44,9 @@ blue = video[:,:,:,2]
 
 # reshape
 num = vshape[0]
-red_flat = red.reshape(-1,num)
-green_flat = green.reshape(-1,num)
-blue_flat = blue.reshape(-1,num)
+red_flat = red.reshape(num,-1)
+green_flat = green.reshape(num,-1)
+blue_flat = blue.reshape(num,-1)
 
 # apply SVD
 r = 5
@@ -64,7 +64,7 @@ num = vshape[0]
 flat = video.reshape(num,-1)
 
 # apply SVD
-r = 5
+r = 1
 q = 1
 p = 3
 approx = rand_svd(flat, r, q, p)
@@ -74,4 +74,4 @@ approx = rand_svd(flat, r, q, p)
 vapprox = approx.reshape(vshape)
 
 #output
-vid.io.vwrite('school_compressed.mp4', vapprox)
+vid.io.vwrite('school_full_rank_1.mp4', vapprox)
