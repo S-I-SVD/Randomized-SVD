@@ -14,7 +14,7 @@ import skvideo.utils
 '''
 # set wd
 import os
-os. chdir('..\Week 3')
+os. chdir('./Documents/GitHub/Randomized-SVD/jennifer')
 '''
 
 # svd algorithm
@@ -64,9 +64,9 @@ num = vshape[0]
 flat = video.reshape(num,-1)
 
 # apply SVD
-r = 1
-q = 1
-p = 3
+r = 2 # rank
+q = 1 # power iterations 
+p = 3 # oversampling parameter
 approx = rand_svd(flat, r, q, p)
 
 
@@ -74,4 +74,4 @@ approx = rand_svd(flat, r, q, p)
 vapprox = approx.reshape(vshape)
 
 #output
-vid.io.vwrite('school_full_rank_1.mp4', vapprox)
+vid.io.vwrite('school_full_rank_2.mp4', vapprox)
