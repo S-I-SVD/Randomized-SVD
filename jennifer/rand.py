@@ -51,5 +51,15 @@ for r in[1,10,100,849]:
     plt.imshow(approx)
     plt.show()
     
-    
+def logplot(X,r,q,p):
+    ny = X.shape[1]
+    P =  np.random.standard_normal(size=(ny, r+p))
+    Z = X @ P
+    for k in range(1,q):
+        Z = X @ (X.conj().transpose() @ Z)
+    Q,R = np.linalg.qr(Z,mode='reduced')
+    Y = Q.conj().transpose() @ X
+    Uy , S , V = np.linalg.svd(Y, full_matrices=False)
+    plt.semilogy(np.diag(S),'ro')
+    #plt.semilogy(S.cumsum(axis=0)/S.sum(axis=0),'ro')
     
