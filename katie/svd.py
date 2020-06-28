@@ -11,26 +11,30 @@ import os
 import imageio
 from timeit import timeit
 
-
 img = imageio.imread('imageio:chelsea.png')
 
 #Function for doing a regular SVD
+
 def regularSVD(M):
+    #stacking
+    M_type = M.dtype
+    r, c = M.shape[:2]
+    M_stacked = M.reshape(-1, c)
     #Create economy SVD for M
-    U, S, VT = np.linalg.svd(M, full_matrices=False)
+    U, S, VT = np.linalg.svd(M_stacked, full_matrices=False)
     #Turn singular values into a diagonal matrix
     #Return approximate image
     return U, S, VT
 
-def regSVDapprox(M, r):
-    U, S, VT = regularSVD(M)
+def regSVDapprox(M, r): #can only take in a matrix already stacked
+    U, S, VT = np.linalg.svd(M, full_matrices=False)
     S = np.diag(S)
     # Construct approximate image from U, S, VT with rank k
     M_approx = U[:,:r] @ S[0:r,:r] @ VT[:r,:]
     return M_approx
 
 def rSVDapprox(M,r,poweriterations,oversample):
-    U, S, VT = rSVD(M,r,poweriterations,oversample)
+    U, S, VT = rSVD(M,poweriterations,oversample)
     M_approx = U[:,:r] @ S[0:r,:r] @ VT[:r,:]
     return M_approx
     
@@ -42,7 +46,7 @@ def colorchannelsvd(M,k): #M is the matrix, k is the rank of the approximation
     Blue = M[:,:,2]
     colors = (Red, Green, Blue)
     for i in range(3): #range(3) since there's three color layers
-        approx[:,:,i] = regularsvd(colors[i], k)
+        approx[:,:,i] = regularSVD(colors[i], k)
     return approx  #returns the approximation of the original color image M
 
 def colorstackingsvd(M,k): #M is the matrix, k is the rank of the approximation
@@ -51,11 +55,9 @@ def colorstackingsvd(M,k): #M is the matrix, k is the rank of the approximation
     r, c = M.shape[:2]
     M_stacked = M.reshape(-1, c)
     M_rank = np.linalg.matrix_rank(M_stacked)
-    M_approx_stacked = regularsvd(M_stacked, k)
+    M_approx_stacked = regularSVD(M_stacked, k)
     M_approx = M_approx_stacked.reshape(r, c, -1)
     return M_approx
-
-
 
 def singularvalueplot(M): #plotting the singular values
     #only use on 1 layer matrix (stacked)
@@ -64,16 +66,28 @@ def singularvalueplot(M): #plotting the singular values
     plt.title('Singular Values')
     plt.show()
     
-def cumsumplot(M): #how much of the original data is captured
-    U, S, VT = np.linalg.svd(M, full_matrices=False)
+def regcumsumplot(M): #how much of the original data is captured
+    #a = imagestack(M)
+    #U, S, VT = np.linalg.svd(a, full_matrices=False)
+    U, S, VT = regularSVD(M)
+    plt.plot(np.cumsum(S)/np.sum(S))
+    plt.title('Singular Values: Cumulative Sum (Regular, Stacking)')
+    plt.show()
+
+def rcumsumplot(M,poweriterations,oversample): #how much of the original data is captured
+    #a = imagestack(M)
+    U, S, VT = rSVD(M,poweriterations,oversample)
     plt.plot(np.cumsum(np.diag(S))/np.sum(np.diag(S)))
-    plt.title('Singular Values: Cumulative Sum')
+    plt.title('Singular Values: Cumulative Sum (Randomized, Stacking)')
     plt.show()
     
-def rSVD(M,r,poweriterations,oversample):
+def rSVD(M,poweriterations,oversample):
     #Sample column space of M with P matrix
-    M = imagestack(M) #imagestack turns it into a 2D matrix
-    r, c = M.shape
+    #M = imagestack(M) #imagestack turns it into a 2D matrix
+    M_type = M.dtype
+    r, c = M.shape[:2]
+    j = M.reshape(-1, c)
+    M = j
     #random projection matrix
     P = np.random.rand(c,r+oversample)
     #sampling from M's column space
@@ -101,35 +115,64 @@ def imagerestack(original, M):
     M_approx = M.reshape(r, c, -1)
     return M_approx
 
-#def svdtime():
-    #print("Regular SVD, rank {0}: {1} seconds".format(k, timeit(lambda : regSVDapprox(M,r), number=100))
-    #print("Randomized SVD, rank {0}: {1} seconds".format(k, timeit(lambda : rSVDapprox(M,r, poweriterations, oversample), number=100))
-    
-def regcompressmatrix(M, k):
+def rcompressmatrix(M, k, poweriterations, oversample): #doesn't need a stacked matrix
     M_type = M.dtype
     #stacking color channels
     r, c = M.shape[:2]
-    M_stacked = M.reshape(-1, c)
-    b = regSVDapprox(M_stacked, k)
+    stacked = M.reshape(-1, c)
+    M = stacked
+    #random projection matrix
+    P = np.random.rand(c,r+oversample)
+    #sampling from M's column space
+    Z = M @ P
+    #power iterations
+    for k in range(poweriterations):
+        Z = M @ (M.T @ Z)
+    #QR factorization
+    Q, R = np.linalg.qr(Z,mode='reduced')
+    #Compute SVD on projected Y = Q.T @ X
+    Y = Q.T @ M
+    UY, S, VT = np.linalg.svd(Y,full_matrices=0)
+    U = Q @ UY
+    S = np.diag(S)
+    b = U[:,:k] @ S[0:k,:k] @ VT[:k,:]
     #M_approx = imagerestack(M, b)
     M_approx = b.reshape(r, c, -1)
     #overflow/underflow issues with color
     if np.issubdtype(M_type, np.integer):
         M_approx = np.clip(M_approx, 0, 255)
     else:
-        M_approx = np.clip(img_approx, 0, 1)
+        M_approx = np.clip(M_approx, 0, 1)
+    return M_approx.astype(M_type)
+
+def regcompressmatrix(M, k): 
+    M_type = M.dtype
+    #stacking color channels
+    r, c = M.shape[:2]
+    M_stacked = M.reshape(-1, c)
+    M_rank = np.linalg.matrix_rank(M_stacked)
+    
+    #SVD
+    U, S, VT = np.linalg.svd(M_stacked, full_matrices=False)
+    S = np.diag(S)
+    # Construct approximate image from U, S, VT with rank k #color stacked
+    M_approx_stacked = U[:,:k] @ S[0:k,:k] @ VT[:k,:]
+    #M_approx = imagerestack(M, b)
+    M_approx = M_approx_stacked.reshape(r, c, -1)
+    #dimension issues
+    if M_approx.shape[2] == 1:
+        M_approx.shape = M_approx.shape[:2] #should output a two dimensional matrix
+    #overflow/underflow issues with color
+    if np.issubdtype(M_type, np.integer):
+        M_approx = np.clip(M_approx, 0, 255)
+    else:
+        M_approx = np.clip(M_approx, 0, 1)
     return M_approx.astype(M_type)
 
 def regcompressvideo(M, k):
     M_shape = M.shape
     frames = M_shape[0]
     M_flat = M.reshape(frames, -1)
-    M_flat_approx = regcompressmatrix(M,k)
-    M_approx_video = M_flat_approx.reshape(M_shape)
+    M_flat_approx = regcompressmatrix(M_flat,k)
+    M_approx_video = M_flat_approx.reshape(M_shape) #takes two dimensional matrix and makes it in video format again
     return M_approx_video
-
-
-
-#a = regcompressmatrix(img, 2)
-#plt.imshow(a)
-#plt.show()
