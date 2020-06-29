@@ -34,34 +34,42 @@ def randomized_svd(matrix, rank, oversample=0, power_iterations = 0, full_matric
 '''
 Computes a rank <rank> approximation of a matrix with optional oversampling and randomization 
 '''
-def rank_k_approx(mat, rank, randomized=False, oversample=0, power_iterations=0):
+def rank_k_approx(mat, rank=None, ratio=None, min_energy=None, randomized=False, 
+        oversample=0, power_iterations=0):
+
+    if rank == None and ratio == None and min_energy == None:
+        raise Exception('Must provide either rank, ratio, or min_energy')
+
     if (not randomized):
         u,s,vh = np.linalg.svd(mat, full_matrices=False)
     else:
         u,s,vh = randomized_svd(mat, rank=rank, oversample=oversample, 
                 power_iterations=power_iterations, full_matrices=False)
 
+    if rank == None:
+        if ratio == None:
+            s_cumsum = [sum(s[0:i]) for i in range(0,s.size)] / sum(s)
+            rank = int(np.arange(1,s.size+1)[s_cumsum >= min_energy][0])
+        else:
+            rank = int(la.matrix_rank(mat) * ratio) 
+
     return u[:, :rank] @ np.diag(s[:rank]) @ vh[:rank, :]
 
 '''
 Compresses an image using a low rank approximation. Takes in either the rank of the approximation or the compression ratio.
 '''
-def compress_image(img, ratio=None, rank=None, randomized=False, oversample=0, power_iterations=0):
+def compress_image(img, ratio=None, rank=None, min_energy=None, randomized=False, oversample=0, power_iterations=0):
     img_type = img.dtype
         
     # Stack color channels
     rows, columns = img.shape[:2] 
-    img_stacked = img.reshape(-1, columns)
+    img_stacked = img.reshape(rows, -1)
     img_rank = np.linalg.matrix_rank(img_stacked)
-
-    if(rank == None):
-        if(ratio == None):
-            raise Exception('compress_image must be passed either rank or ratio')
-        rank = int(ratio * img_rank)
-
+    
     # Compute rank <rank> approximation of image
-    img_approx_stacked = rank_k_approx(img_stacked, rank=rank, 
-            oversample=oversample, randomized=randomized, power_iterations=power_iterations)
+    img_approx_stacked = rank_k_approx(img_stacked, rank=rank, ratio=ratio,
+            oversample=oversample, min_energy=min_energy,
+            randomized=randomized, power_iterations=power_iterations)
     img_approx = img_approx_stacked.reshape(rows, columns, -1)
 
     # Get rid of redundant dimensions
@@ -84,12 +92,12 @@ def compress_video(video, ratio=None, rank=None, randomized=False, oversample=0)
     num_frames = video_shape[0]
 
     video_flattened = video.reshape(num_frames, -1)
-    print('video_flattened.rank = %d' % la.matrix_rank(video_flattened))
-    print('video_flattened.shape = %s' % (video_flattened.shape,))
+    #print('video_flattened.rank = %d' % la.matrix_rank(video_flattened))
+    #print('video_flattened.shape = %s' % (video_flattened.shape,))
     video_flattened_approx = compress_image(video_flattened, 
             ratio=ratio, rank=rank, randomized=randomized, oversample=oversample)
-    print('video_flattened_approx.shape = %s' % (video_flattened_approx.shape,))
-    print('video_flattened_approx.rank = %d' % la.matrix_rank(video_flattened_approx))
+    #print('video_flattened_approx.shape = %s' % (video_flattened_approx.shape,))
+    #print('video_flattened_approx.rank = %d' % la.matrix_rank(video_flattened_approx))
 
     video_approx = video_flattened_approx.reshape(video_shape)
 
