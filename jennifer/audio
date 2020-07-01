@@ -4,6 +4,7 @@
 Created on Tue Jun 30 10:00:55 2020
 
 @author: jenzyy
+reference: https://stackoverflow.com/questions/53633177/how-to-read-a-mp3-audio-file-into-a-numpy-array-save-a-numpy-array-to-mp3/53633178
 """
 
 
