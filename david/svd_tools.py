@@ -40,6 +40,9 @@ def rank_k_approx(mat, rank=None, ratio=None, min_energy=None, randomized=False,
     if rank == None and ratio == None and min_energy == None:
         raise Exception('Must provide either rank, ratio, or min_energy')
 
+    if rank == None and ratio != None:
+        rank = int(la.matrix_rank(mat) * ratio)
+
     if (not randomized):
         u,s,vh = np.linalg.svd(mat, full_matrices=False)
     else:
@@ -102,6 +105,12 @@ def compress_video(video, ratio=None, rank=None, randomized=False, oversample=0)
     video_approx = video_flattened_approx.reshape(video_shape)
 
     return video_approx
+
+def map_sv(mat, fun):
+    U, S, V = la.svd(mat, full_matrices=False)
+    SS = np.array([fun(s) for s in S])
+    return U @ np.diag(SS) @ V
+
 
 '''
 Displays a log-plot of the singular values of the input matrix
