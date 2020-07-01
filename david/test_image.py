@@ -114,12 +114,21 @@ def svd_cumsum_plot(mat):
     plt.plot(1 + np.arange(s.size), [sum(s[0:i]) for i in range(0,s.size)] / sum(s), 'ro')
     plt.show()
 
-img = np.asarray(Image.open('res/raccoon.jpg'))
-energy_vs_accuracy(img, [.8 + k*0.01 for k in range(0,20)])
+'''
+Plot n vs the sum of the first n sigular values of a matrix
+'''
+def svd_frobenius_cumsum_plot(mat):
+    u, s, v = np.linalg.svd(mat, full_matrices=False)
+    plt.plot(1 + np.arange(s.size), [np.sqrt(sum(s[0:i]**2)) for i in range(0,s.size)] / np.sqrt(sum(s**2)), 'ro')
+    plt.show()
+
+img = np.asarray(Image.open('res/raccoon.jpg').convert('L'))
+#energy_vs_accuracy(img, [.8 + k*0.01 for k in range(0,20)])
 #time_svd(img.reshape(img.shape[0],-1))
 #display_svd(np.asarray(Image.open('res/raccoon.jpg')))
 #display_svd_randomized(img)
 #svd_log_plot(img.reshape(img.shape[0], -1))
+svd_frobenius_cumsum_plot(img.reshape(img.shape[0],-1))
 
 
 #time_them()
