@@ -111,6 +111,19 @@ def map_sv(mat, fun):
     SS = np.array([fun(s) for s in S])
     return U @ np.diag(SS) @ V
 
+def replace_singular_vectors(source, destination, indices, side):
+    us, ss, vs = la.svd(source, full_matrices = False) 
+    ud, sd, vd = la.svd(destination, full_matrices = False) 
+
+    if side == 'left':
+        for i in indices:
+            ud[:,i] = us[:,i]
+    elif side == 'right':
+        for i in indices:
+            vd[i, :] = vs[i,:]
+
+    print('replace svec: %s . %s . %s' % (ud.shape, sd.size, vd.shape))
+    return ud @ np.diag(sd) @ vd
 
 '''
 Displays a log-plot of the singular values of the input matrix
