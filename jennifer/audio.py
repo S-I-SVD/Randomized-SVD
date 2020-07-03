@@ -50,15 +50,17 @@ def rand_svd(X,r,q,p):
     approx = U @ np.diag(S)[:, :r] @ V[:r, :]
     return approx
 
-def specgraph(data):
+def specgraph(data,text):
     mp3_audio = AudioSegment.from_file(data, format="mp3")  # read mp3
     wname = mktemp('.wav')  # use temporary file
     mp3_audio.export(wname, format="wav")  # convert to wav
     FS, data = wavfile.read(wname)  # read wav file
     if mp3_audio.channels==2:
         plt.specgram(data[:,0], Fs=FS, NFFT=128, noverlap=0)  # plot
+        plt.title(text) # label
     else:
         plt.specgram(data, Fs=FS, NFFT=128, noverlap=0)  # plot
+        plt.title(text) # label
     plt.show()
 
 # load mp3
