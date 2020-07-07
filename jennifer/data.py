@@ -65,7 +65,12 @@ svd_df1['party']=(state['party']=="Democratic")
 # 3D Scatter plot: SV1, SV2, and SV3
 fig2 = plt.figure()
 ax = fig2.add_subplot(111,projection = '3d')
-ax.scatter(svd_df1['SV1'],svd_df1['SV2'],svd_df1['SV3'],c=svd_df1['party'],cmap = 'coolwarm',)    
+#ax.scatter(svd_df1['SV1'],svd_df1['SV2'],svd_df1['SV3'],c=svd_df1['party'],cmap = 'coolwarm',)    
+for j in range(svd_df1.shape[0]):
+    if svd_df1.loc[j,'party']:
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], marker = 'x', color = 'r')
+    else:
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], marker = 'o', color = 'b')    
 ax.view_init(25,20)
 ax.legend
 plt.show()
