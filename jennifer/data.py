@@ -4,6 +4,8 @@
 Created on Mon Jul  6 15:00:02 2020
 
 @author: jenzyy
+
+data source: https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/
 """
 
 
@@ -48,3 +50,22 @@ sns.scatterplot(x="SV1", y="SV2", hue="State",
                 alpha=0.7)
 plt.xlabel('SV 1: {0}%'.format(var_explained[0]*100), fontsize=16)
 plt.ylabel('SV 2: {0}%'.format(var_explained[1]*100), fontsize=16)
+
+# data frame containing the first three singular values
+labels1= ['SV'+str(i) for i in range(1,4)]
+svd_df1 = pd.DataFrame(u[:,0:3], index=state.tolist(), columns=labels1)
+svd_df1=svd_df1.reset_index()
+svd_df1.rename(columns={'index':'State'}, inplace=True)
+svd_df1.head()
+
+# take in party variable
+state = pd.read_csv("../data/covid data/state_party.csv")
+svd_df1['party']=(state['party']=="Democratic")
+
+# 3D Scatter plot: SV1, SV2, and SV3
+fig2 = plt.figure()
+ax = fig2.add_subplot(111,projection = '3d')
+ax.scatter(svd_df1['SV1'],svd_df1['SV2'],svd_df1['SV3'],c=svd_df1['party'],cmap = 'coolwarm',)    
+ax.view_init(25,20)
+ax.legend
+plt.show()
