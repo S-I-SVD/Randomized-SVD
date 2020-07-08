@@ -32,6 +32,13 @@ def randomized_svd(matrix, rank, oversample=0, power_iterations = 0, full_matric
     return u, s, v
 
 '''
+Project a matrix onto the given SVD components
+'''
+def svd_project(mat, components, centering='s', rank=None):
+    u, s, vh = centered_svd(mat, full_matrices=False, centering='s', rank=rank)
+    return u[:, components] @ np.diag(s[components]) @ vh[components, :]
+
+'''
 Computes a rank <rank> approximation of a matrix with optional oversampling and randomization 
 '''
 def rank_k_approx(x, rank=None, ratio=None, min_energy=None, randomized=False, 
@@ -182,6 +189,7 @@ def centered_svd(x, centering=None, full_matrices=False, randomized=False, overs
         return randomized_svd(x_centered, rank=rank, oversample=oversample, full_matrices=full_matrices)
 
 
+
 '''
 Displays a log-plot of the singular values of the input matrix
 '''
@@ -198,6 +206,9 @@ def svd_cumsum_plot(mat):
     plt.plot(1 + np.arange(s.size), [sum(s[0:i]) for i in range(0,s.size)] / sum(s), 'ro')
     plt.show()
 
+'''
+Display the generalized scree plot (Zhang) 
+'''
 def scree_plot(mat, num_sv, title='Scree Plot'):
     ranks = np.arange(2,num_sv)
 
