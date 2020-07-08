@@ -60,7 +60,7 @@ svd_df1.head()
 
 # take in party variable
 state = pd.read_csv("../data/covid data/state_party.csv")
-svd_df1['party']=(state['party']=="Democratic")
+svd_df1['party']=(state['party']=="Republican")
 
 # 3D Scatter plot: SV1, SV2, and SV3
 fig2 = plt.figure()
