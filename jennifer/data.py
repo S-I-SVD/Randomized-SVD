@@ -44,8 +44,12 @@ svd_df=svd_df.reset_index()
 svd_df.rename(columns={'index':'State'}, inplace=True)
 svd_df.head()
  
+# take in party variable
+state = pd.read_csv("../data/covid data/state_party.csv")
+svd_df['party'] = state['party']
+
 # Scatter plot: SV1 and SV2
-sns.scatterplot(x="SV1", y="SV2", hue="State", 
+sns.scatterplot(x="SV1", y="SV2", hue="party", 
                 data=svd_df, s=100,
                 alpha=0.7)
 plt.xlabel('SV 1: {0}%'.format(var_explained[0]*100), fontsize=16)
@@ -59,7 +63,6 @@ svd_df1.rename(columns={'index':'State'}, inplace=True)
 svd_df1.head()
 
 # take in party variable
-state = pd.read_csv("../data/covid data/state_party.csv")
 svd_df1['party']=(state['party']=="Republican")
 
 # 3D Scatter plot: SV1, SV2, and SV3
