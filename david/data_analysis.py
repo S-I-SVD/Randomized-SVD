@@ -20,45 +20,94 @@ def surface_plot(ax, data, xlabel, ylabel, zlabel, title):
     ax.set_ylabel(ylabel)
     ax.set_zlabel(zlabel)
 
+'''
+Plot a data matrix as an aggregate of line plots
+'''
+def lines_plot(ax, data, axis, xlabel, ylabel, title, labels=None):
+    if axis[0].lower() == 'r':
+        # Each row is a line
+        data = data.T
+        num_pts = data.shape[0]
+    elif axis[0].lower() == 'c':
+        # Each column is a line
+        num_pts = data.shape[0]
+
+    xs = np.arange(num_pts)
+
+    for i in range(data.shape[1]):
+        ax.plot(xs, data[:, i])
+        if labels is not None:
+            ax.text(xs[-1], data[-1, i], labels[i])
+
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+
+
 
 '''
 Plot the projection of a 2D data matrix onto one component of its SVD
 '''
-def svd_component_plot(ax, data, component, xlabel, ylabel, zlabel, topic='', title=None, centering='s'):
+def svd_component_plot(ax, data, component, xlabel, ylabel, zlabel, topic='', title=None, centering='s', style='surface', axis = 'rows', labels = None):
     letter = centering[0].upper()
     if topic != '':
         topic = topic + ': '
     if title is None:
         title = "%s%sSVD, SV%d" % (topic, letter, component+1)
-    surface_plot( ax     = ax,
-                  data   = svdt.svd_project(data, [component], centering=centering),
-                  title  = title,
-                  xlabel = 'Days since 1/22/20',
-                  ylabel = 'County',
-                  zlabel = 'Total Deaths'
-                )
+
+    if style == 'surface':
+        surface_plot( ax     = ax,
+                      data   = svdt.svd_project(data, [component], centering=centering),
+                      title  = title,
+                      xlabel = 'Days since 1/22/20',
+                      ylabel = 'County',
+                      zlabel = 'Total Deaths'
+                    )
+    if style == 'lines':
+        lines_plot( ax     = ax,
+                    data   = svdt.svd_project(data, [component], centering=centering),
+                    title  = title,
+                    labels = labels,
+                    axis   = 'rows',
+                    xlabel = 'Days since 1/22/20',
+                    ylabel = 'County',
+                  )
+
 
 '''
 Plot the projection of a 2D data matrix onto its rank <rank> approximation
 '''
-def svd_approx_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=None, centering='s'):
+def svd_approx_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=None, centering='s',
+        style='surface', axis='rows', labels=None):
     letter = centering[0].upper()
     if topic != '':
         topic = topic + ': '
     if title is None:
         title = '%sRank %d Approx (%sSVD)' % (topic, rank, letter)
-    surface_plot( ax     = ax, 
-                  data   = svdt.rank_k_approx(data, rank=rank),
-                  title  = title,
-                  xlabel = 'Days since 1/22/20',
-                  ylabel = 'County',
-                  zlabel = 'Total Deaths'
-                )
+
+    if style == 'surface':
+        surface_plot( ax     = ax, 
+                      data   = svdt.rank_k_approx(data, rank=rank, centering=centering),
+                      title  = title,
+                      xlabel = 'Days since 1/22/20',
+                      ylabel = 'County',
+                      zlabel = 'Total Deaths'
+                    )
+    elif style == 'lines':
+        lines_plot( ax     = ax, 
+                    data   = svdt.rank_k_approx(data, rank=rank, centering=centering),
+                    title  = title,
+                    xlabel = 'Days since 1/22/20',
+                    ylabel = 'Total Deaths',
+                    axis   = axis,
+                    labels = labels
+                  )
 
 '''
 Plot the residuals of the rank <rank> approximation of a data matrix
 '''
-def svd_residual_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=None, centering='s'):
+def svd_residual_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=None, centering='s',
+        style='surface', axis='rows', labels=None):
     letter = centering[0].upper()
     residuals = data - svdt.rank_k_approx(data, rank=rank, centering=centering)
 
@@ -67,32 +116,61 @@ def svd_residual_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=No
     if title is None:
         title = '%sRank %d Approx Residuals (%sSVD)' % (topic, rank, letter)
 
-    surface_plot( ax     = ax, 
-                  data   = residuals,
-                  title  = title,
-                  xlabel = 'Days since 1/22/20',
-                  ylabel = 'County',
-                  zlabel = 'Total Deaths'
-                )
+    if style == 'surface':
+        surface_plot( ax     = ax, 
+                      data   = residuals,
+                      title  = title,
+                      xlabel = 'Days since 1/22/20',
+                      ylabel = 'County',
+                      zlabel = 'Total Deaths'
+                    )
+    elif style == 'lines':
+        lines_plot( ax     = ax, 
+                    data   = residuals,
+                    title  = title,
+                    xlabel = 'Days since 1/22/20',
+                    ylabel = 'Total Deaths',
+                    axis   = axis,
+                    labels = labels
+                  )
 
-def plot_svd_surfaces(data, title, xlabel, ylabel, zlabel, centering='s'):
+
+def svd_plots(data, title, xlabel, ylabel, zlabel, centering='s', style='surface', labels=None, axis='rows'):
     fig = plt.figure()
 
-    p_original = fig.add_subplot('231', projection='3d')
-    p_sv = list()
-    p_sv.append(fig.add_subplot('232', projection='3d'))
-    p_sv.append(fig.add_subplot('233', projection='3d'))
-    p_sv.append(fig.add_subplot('234', projection='3d'))
-    p_approx = fig.add_subplot('235', projection='3d')
-    p_residuals = fig.add_subplot('236', projection='3d')
+    if style == 'surface':
+        p_original = fig.add_subplot('231', projection='3d')
+        p_sv = list()
+        p_sv.append(fig.add_subplot('232', projection='3d'))
+        p_sv.append(fig.add_subplot('233', projection='3d'))
+        p_sv.append(fig.add_subplot('234', projection='3d'))
+        p_approx = fig.add_subplot('235', projection='3d')
+        p_residuals = fig.add_subplot('236', projection='3d')
 
-    surface_plot( ax     = p_original, 
-                  data   = data, 
-                  title  = title,
-                  xlabel = xlabel,
-                  ylabel = ylabel,
-                  zlabel = zlabel
-            )
+        surface_plot( ax     = p_original, 
+                      data   = data, 
+                      title  = title,
+                      xlabel = xlabel,
+                      ylabel = ylabel,
+                      zlabel = zlabel
+                    )
+    elif style == 'lines':
+        p_original = fig.add_subplot('231')
+        p_sv = list()
+        p_sv.append(fig.add_subplot('232'))
+        p_sv.append(fig.add_subplot('233'))
+        p_sv.append(fig.add_subplot('234'))
+        p_approx = fig.add_subplot('235')
+        p_residuals = fig.add_subplot('236')
+
+        lines_plot( ax     = p_original, 
+                    data   = data, 
+                    title  = title,
+                    xlabel = xlabel,
+                    ylabel = ylabel,
+                    labels = labels,
+                    axis   = axis
+                  )
 
     for i in range(3):
         svd_component_plot( ax        = p_sv[i], 
@@ -101,7 +179,10 @@ def plot_svd_surfaces(data, title, xlabel, ylabel, zlabel, centering='s'):
                             xlabel    = xlabel, 
                             ylabel    = ylabel, 
                             zlabel    = zlabel,
-                            centering = centering
+                            centering = centering,
+                            style     = style,
+                            labels    = labels,
+                            axis      = axis
                             )
     svd_approx_plot( ax = p_approx,
                      data      = data,
@@ -109,7 +190,10 @@ def plot_svd_surfaces(data, title, xlabel, ylabel, zlabel, centering='s'):
                      xlabel    = xlabel,
                      ylabel    = ylabel,
                      zlabel    = zlabel,
-                     centering = centering
+                     centering = centering,
+                     style     = style,
+                     labels    = labels,
+                     axis      = axis
                    )
     svd_residual_plot( ax = p_residuals,
                        data      = data,
@@ -117,7 +201,10 @@ def plot_svd_surfaces(data, title, xlabel, ylabel, zlabel, centering='s'):
                        xlabel    = xlabel,
                        ylabel    = ylabel,
                        zlabel    = zlabel,
-                       centering = centering
+                       centering = centering,
+                       style     = style,
+                       labels    = labels,
+                       axis      = axis
                      )
 
     plt.show()
