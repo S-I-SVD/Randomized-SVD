@@ -35,7 +35,7 @@ def randomized_svd(matrix, rank, oversample=0, power_iterations = 0, full_matric
 Project a matrix onto the given SVD components
 '''
 def svd_project(mat, components, centering='s', rank=None):
-    u, s, vh = centered_svd(mat, full_matrices=False, centering='s', rank=rank)
+    u, s, vh = centered_svd(mat, full_matrices=False, centering=centering, rank=rank)
     return u[:, components] @ np.diag(s[components]) @ vh[components, :]
 
 '''
