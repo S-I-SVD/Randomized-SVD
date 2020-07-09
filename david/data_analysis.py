@@ -48,7 +48,7 @@ def lines_plot(ax, data, axis, xlabel, ylabel, title, labels=None):
 '''
 Plot the projection of a 2D data matrix onto one component of its SVD
 '''
-def svd_component_plot(ax, data, component, xlabel, ylabel, zlabel, topic='', title=None, centering='s', style='surface', axis = 'rows', labels = None):
+def svd_component_plot(ax, data, component, xlabel, ylabel, zlabel='', topic='', title=None, centering='s', style='surface', axis = 'rows', labels = None):
     letter = centering[0].upper()
     if topic != '':
         topic = topic + ': '
@@ -77,7 +77,7 @@ def svd_component_plot(ax, data, component, xlabel, ylabel, zlabel, topic='', ti
 '''
 Plot the projection of a 2D data matrix onto its rank <rank> approximation
 '''
-def svd_approx_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=None, centering='s',
+def svd_approx_plot(ax, data, rank, xlabel, ylabel, zlabel='', topic='', title=None, centering='s',
         style='surface', axis='rows', labels=None):
     letter = centering[0].upper()
     if topic != '':
@@ -106,7 +106,7 @@ def svd_approx_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=None
 '''
 Plot the residuals of the rank <rank> approximation of a data matrix
 '''
-def svd_residual_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=None, centering='s',
+def svd_residual_plot(ax, data, rank, xlabel, ylabel, zlabel='', topic='', title=None, centering='s',
         style='surface', axis='rows', labels=None):
     letter = centering[0].upper()
     residuals = data - svdt.rank_k_approx(data, rank=rank, centering=centering)
@@ -135,7 +135,7 @@ def svd_residual_plot(ax, data, rank, xlabel, ylabel, zlabel, topic='', title=No
                   )
 
 
-def svd_plots(data, title, xlabel, ylabel, zlabel, centering='s', style='surface', labels=None, axis='rows'):
+def svd_plots(data, title, xlabel, ylabel, zlabel='', centering='s', style='surface', labels=None, axis='rows'):
     fig = plt.figure()
 
     if style == 'surface':
