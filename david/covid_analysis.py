@@ -6,20 +6,32 @@ import data_analysis as da
 
 DATA_PATH = '../data/covid data/'
 
-df_covid_deaths = pd.read_csv(DATA_PATH + 'covid_deaths_usafacts.csv', sep=',')
-df_fl_deaths = df_covid_deaths[df_covid_deaths['State'] == 'FL']
-df_fl_counties = df_covid_deaths['County Name']
+'''
+Returns a matrix giving the total deaths over days for each county in a a state 
+and an array with the corresponding county names
+'''
+def get_state_deaths(state):
+    df_covid_deaths = pd.read_csv(DATA_PATH + 'covid_deaths_usafacts.csv', sep=',')
+    df_state_deaths = df_covid_deaths[df_covid_deaths['State'] == state.upper()]
+    df_state_counties = df_state_deaths['County Name']
 
-fl_counties = df_fl_counties.values
-fl_deaths = df_fl_deaths.loc[:, '1/22/20':].values
+    state_counties = df_state_counties.values
+    state_deaths = df_state_deaths.loc[:, '1/22/20':].values
+
+    return state_deaths, state_counties
 
 
-def plot_fl_deaths_surfaces():
-    da.plot_svd_surfaces(
-            data   = fl_deaths, 
-            title  = 'FL Daily COVID-19 Deaths by County',
-            xlabel = 'Days since 1/22/20',
-            ylabel = 'County',
-            zlabel = 'Total Deaths'
-            )
-
+def state_deaths_svd_plots(state, centering='s', style='lines'):
+    state_deaths, county_names = get_state_deaths(state)
+    
+    da.svd_plots(
+        data      = state_deaths, 
+        title     = '%s Daily COVID-19 Deaths by County' % state.upper(),
+        xlabel    = 'Days since 1/22/20',
+        ylabel    = 'County',
+        zlabel    = 'Total Deaths',
+        centering = centering,
+        style     = style,
+        axis      = 'rows',
+        labels    = county_names
+    )
