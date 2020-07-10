@@ -45,19 +45,18 @@ svd_df=svd_df.reset_index()
 svd_df.rename(columns={'index':'State'}, inplace=True)
 svd_df.head()
  
-# take in party variable
-state = pd.read_csv("../data/covid data/state_party.csv")
-svd_df['party'] = state['party']
+# take in region variable
+state = pd.read_csv("../data/covid data/state_region.csv")
+svd_df['region'] = state['region']
 
 # Scatter plot: SV1 and SV2
-sns.scatterplot(x="SV1", y="SV2", hue="party", 
+sns.scatterplot(x="SV1", y="SV2", hue="region", 
                 data=svd_df, s=100,
                 alpha=0.7)
 for j in range(svd_df.shape[0]):  
     plt.text(svd_df['SV1'][j],svd_df['SV2'][j],svd_df['State'][j])
 plt.xlabel('SV 1: {0}%'.format(var_explained[0]*100), fontsize=16)
 plt.ylabel('SV 2: {0}%'.format(var_explained[1]*100), fontsize=16)
-plt.text
 
 # data frame containing the first three singular values
 labels1= ['SV'+str(i) for i in range(1,4)]
@@ -67,17 +66,29 @@ svd_df1.rename(columns={'index':'State'}, inplace=True)
 svd_df1.head()
 
 # take in party variable
-svd_df1['party']=(state['party']=="Republican")
+svd_df1['region'] = state['region']
 
 # 3D Scatter plot: SV1, SV2, and SV3
 fig2 = plt.figure()
 ax = fig2.add_subplot(111,projection = '3d')
 #ax.scatter(svd_df1['SV1'],svd_df1['SV2'],svd_df1['SV3'],c=svd_df1['party'],cmap = 'coolwarm',)    
 for j in range(svd_df1.shape[0]):
-    if svd_df1.loc[j,'party']:
-        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], marker = 'x', color = 'r')
+    if svd_df1.loc[j,'region']=="South":
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'r')
+    elif svd_df1.loc[j,'region']=="Pacific":
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'b')    
+    elif svd_df1.loc[j,'region']=="Mountain States":
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'y')    
+    elif svd_df1.loc[j,'region']=="New England":
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'm')
+    elif svd_df1.loc[j,'region']=="Middle Atlantic":
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'c')
+    elif svd_df1.loc[j,'region']=="West North Central":
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'k')
+    elif svd_df1.loc[j,'region']=="East North Central":
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'w')    
     else:
-        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], marker = 'o', color = 'b')    
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'g')    
     ax.text(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j],svd_df1['State'][j])
 ax.view_init(25,20)
 ax.legend
