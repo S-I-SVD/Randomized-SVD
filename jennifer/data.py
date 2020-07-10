@@ -71,8 +71,10 @@ svd_df1['region'] = state['region']
 # 3D Scatter plot: SV1, SV2, and SV3
 fig2 = plt.figure()
 ax = fig2.add_subplot(111,projection = '3d')
-#ax.scatter(svd_df1['SV1'],svd_df1['SV2'],svd_df1['SV3'],c=svd_df1['party'],cmap = 'coolwarm',)    
+ax.scatter(svd_df1['SV1'],svd_df1['SV2'],svd_df1['SV3'],cmap = 'coolwarm',)
+
 for j in range(svd_df1.shape[0]):
+    '''
     if svd_df1.loc[j,'region']=="South":
         ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'r')
     elif svd_df1.loc[j,'region']=="Pacific":
@@ -88,8 +90,10 @@ for j in range(svd_df1.shape[0]):
     elif svd_df1.loc[j,'region']=="East North Central":
         ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'w')    
     else:
-        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'g')    
+        ax.scatter(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j], color = 'g')
+    '''
     ax.text(svd_df1['SV1'][j],svd_df1['SV2'][j],svd_df1['SV3'][j],svd_df1['State'][j])
+    
 ax.view_init(25,20)
 ax.legend
 plt.show()
