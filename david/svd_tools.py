@@ -209,8 +209,9 @@ def svd_cumsum_plot(mat):
 '''
 Display the generalized scree plot (Zhang) 
 '''
-def scree_plot(mat, num_sv, title='Scree Plot'):
-    ranks = np.arange(2,num_sv)
+def scree_plot(ax, mat, num_sv, title='Scree Plot'):
+    num_sv = num_sv+1
+    ranks = np.arange(1,num_sv)
 
     def residual_proportion(x, rank, centering):
         x_approx = rank_k_approx(x, rank=rank, centering=centering)
@@ -218,18 +219,20 @@ def scree_plot(mat, num_sv, title='Scree Plot'):
 
     residual_proportions = dict( [ ( s, [residual_proportion(mat, rank, s) for rank in ranks]) for s in ['s', 'r', 'c', 'd']] )
     
-    plt.plot(ranks, residual_proportions['s'], color='black', marker='o')
-    plt.plot(ranks - 1/2, residual_proportions['r'], color='red', marker='o')
-    plt.plot(ranks - 1/2, residual_proportions['c'], color='blue', marker='o')
-    plt.plot(ranks, residual_proportions['d'], color='purple', marker='o')
+    ax.plot(ranks, residual_proportions['s'], color='black', marker='o')
+    ax.plot(ranks - 1/2, residual_proportions['r'], color='red', marker='o')
+    ax.plot(ranks - 1/2, residual_proportions['c'], color='blue', marker='o')
+    ax.plot(ranks, residual_proportions['d'], color='purple', marker='o')
 
-    plt.legend(['SSVD', 'RSVD', 'CSVD', 'DSVD'], loc='upper right')
+    ax.legend(['SSVD', 'RSVD', 'CSVD', 'DSVD'], loc='upper right')
 
-    plt.title(title)
-    plt.xlabel('No. SVD Components')
-    plt.ylabel('Residual Proportion')
+    ax.set_title(title)
+    ax.set_xlabel('No. SVD Components')
+    ax.set_ylabel('Residual Proportion')
 
-    plt.show()
+    ax.set_xticks(range(1, num_sv))
+
+    #plt.show()
 
 '''
 a = np.random.rand(100, 100)
