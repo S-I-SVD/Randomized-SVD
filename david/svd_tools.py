@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 from timeit import timeit
 
+
+
 '''
 Computes the randomized singular value decomposition of the input matrix.
 '''
@@ -31,6 +33,46 @@ def randomized_svd(matrix, rank, oversample=0, power_iterations = 0, full_matric
 
     return u, s, v
 
+def compressed_svd(matrix, rank, oversample=5, density=3):
+    rows, cols = matrix.shape
+
+    if density == None:
+        test_matrix = np.random.rand(rank + oversample, rows)
+    else:
+        # Sparse random test matrix
+        test_matrix = np.random.choice(a=[1, 0, -1], 
+                p=[1/(2*density), 1 - 1/density, 1/(2*density)],
+                size=(rank + oversample, rows))
+
+    # Y
+    sketch = test_matrix @ matrix
+
+    # Outer product of sketch matrix with itself to obtain right singular vectors
+    # B
+    outer = sketch @ sketch.T
+
+    # Ensure symmetry
+    #outer = 1/2 * (outer + outer.T) 
+
+    #T, V
+    outer_eigenvalues, outer_eigenvectors = la.eigh(outer)
+    outer_eigenvectors_trunc = np.flip(outer_eigenvectors[:, -rank:],axis=1)
+    outer_eigenvalues_trunc = np.flip(outer_eigenvalues[-rank:])
+    print(outer_eigenvalues)
+    print(outer_eigenvalues_trunc)
+
+    singular_values = np.sqrt(outer_eigenvalues_trunc)
+    singular_values_matrix = np.diag(singular_values)
+
+    right_singular_vectors = sketch.T @ outer_eigenvectors_trunc @ la.inv(singular_values_matrix)
+    scaled_left_singular_vectors = matrix @ right_singular_vectors
+
+    left_singular_vectors_updated, singular_values_updated, right_sv_multiplier = la.svd(scaled_left_singular_vectors, full_matrices=False)
+
+    right_singular_vectors_updated = right_singular_vectors @ right_sv_multiplier.T
+
+    return left_singular_vectors_updated, singular_values_updated, right_singular_vectors_updated.T
+
 '''
 Project a matrix onto the given SVD components
 '''
@@ -41,7 +83,7 @@ def svd_project(mat, components, centering='s', rank=None):
 '''
 Computes a rank <rank> approximation of a matrix with optional oversampling and randomization 
 '''
-def rank_k_approx(x, rank=None, ratio=None, min_energy=None, randomized=False, 
+def rank_k_approx(x, rank=None, ratio=None, min_energy=None, mode='deterministic', 
         oversample=0, power_iterations=0, centering='s'):
 
     if rank == None and ratio == None and min_energy == None:
@@ -50,8 +92,8 @@ def rank_k_approx(x, rank=None, ratio=None, min_energy=None, randomized=False,
     if rank == None and ratio != None:
         rank = int(la.matrix_rank(x) * ratio)
 
-    u, s, vh = centered_svd(x, centering=centering, full_matrices=False, randomized=randomized,
-            oversample=oversample, power_iterations=power_iterations)
+    u, s, vh = centered_svd(x, centering=centering, full_matrices=False, mode=mode,
+            rank=rank, oversample=oversample, power_iterations=power_iterations)
 
     if centering in [None, 's', 'simple']:
         means_mat = 0
@@ -91,8 +133,9 @@ def rank_k_approx(x, rank=None, ratio=None, min_energy=None, randomized=False,
 '''
 Compresses an image using a low rank approximation. Takes in either the rank of the approximation or the compression ratio.
 '''
-def compress_image(img, ratio=None, rank=None, min_energy=None, randomized=False, oversample=0, power_iterations=0):
+def compress_image(img, ratio=None, rank=None, min_energy=None, mode='deterministic', oversample=0, power_iterations=0):
     img_type = img.dtype
+    img = img.astype(np.float64)
         
     # Stack color channels
     rows, columns = img.shape[:2] 
@@ -102,25 +145,27 @@ def compress_image(img, ratio=None, rank=None, min_energy=None, randomized=False
     # Compute rank <rank> approximation of image
     img_approx_stacked = rank_k_approx(img_stacked, rank=rank, ratio=ratio,
             oversample=oversample, min_energy=min_energy,
-            randomized=randomized, power_iterations=power_iterations)
+            mode=mode, power_iterations=power_iterations)
     img_approx = img_approx_stacked.reshape(rows, columns, -1)
 
     # Get rid of redundant dimensions
     if img_approx.shape[2] == 1:
         img_approx.shape = img_approx.shape[:2]
 
+    print(img_approx)
     # Handle overflow/underflow issues
     if np.issubdtype(img_type, np.integer):
         img_approx = np.clip(img_approx, 0, 255)
     else:
         img_approx = np.clip(img_approx, 0, 1)
 
-    return img_approx.astype(img_type)
+    img_approx = img_approx.astype(img_type)
+    return img_approx
 
 '''
 Compresses a video using a low rank approximation. Takes in either the rank of the approximation or the compression ratio.
 '''
-def compress_video(video, ratio=None, rank=None, randomized=False, oversample=0):
+def compress_video(video, ratio=None, rank=None, mode='deterministic', oversample=0):
     video_shape = video.shape
     num_frames = video_shape[0]
 
@@ -128,7 +173,7 @@ def compress_video(video, ratio=None, rank=None, randomized=False, oversample=0)
     #print('video_flattened.rank = %d' % la.matrix_rank(video_flattened))
     #print('video_flattened.shape = %s' % (video_flattened.shape,))
     video_flattened_approx = compress_image(video_flattened, 
-            ratio=ratio, rank=rank, randomized=randomized, oversample=oversample)
+            ratio=ratio, rank=rank, mode=mode, oversample=oversample)
     #print('video_flattened_approx.shape = %s' % (video_flattened_approx.shape,))
     #print('video_flattened_approx.rank = %d' % la.matrix_rank(video_flattened_approx))
 
@@ -158,7 +203,7 @@ def replace_singular_vectors(source, destination, indices, side):
 '''
 Compute SVD of a matrix with row, column, or double centering for PCA
 '''
-def centered_svd(x, centering=None, full_matrices=False, randomized=False, oversample=10, rank=None,
+def centered_svd(x, centering=None, full_matrices=False, mode='deterministic', oversample=10, rank=None,
         power_iterations=0):
     centering = centering.lower()
 
@@ -183,10 +228,15 @@ def centered_svd(x, centering=None, full_matrices=False, randomized=False, overs
 
         x_centered = x - double_means_mat
 
-    if not randomized:
+    mode_letter = mode[0].lower()
+    if mode_letter == 'd':
+        # deterministic
         return la.svd(x_centered, full_matrices=full_matrices)
-    else:
+    elif mode_letter == 'r':
+        # randomized
         return randomized_svd(x_centered, rank=rank, oversample=oversample, full_matrices=full_matrices)
+    elif mode_letter == 'c':
+        return compressed_svd(x_centered, rank=rank, oversample=oversample)
 
 
 
