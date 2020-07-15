@@ -153,13 +153,13 @@ def svd_plots(fig, data, title, xlabel, ylabel, zlabel='', centering='s', style=
                       zlabel = zlabel
                     )
     elif style == 'lines':
-        p_original = fig.add_subplot('231')
+        p_original = fig.add_subplot('231', label='original')
         p_sv = list()
-        p_sv.append(fig.add_subplot('232'))
-        p_sv.append(fig.add_subplot('233'))
-        p_sv.append(fig.add_subplot('234'))
-        p_approx = fig.add_subplot('235')
-        p_residuals = fig.add_subplot('236')
+        p_sv.append(fig.add_subplot('232', label='sv1'))
+        p_sv.append(fig.add_subplot('233', label='sv2'))
+        p_sv.append(fig.add_subplot('234', label='sv3'))
+        p_approx = fig.add_subplot('235', label='approx')
+        p_residuals = fig.add_subplot('236', label='residuals')
 
         lines_plot( ax     = p_original, 
                     data   = data, 
@@ -385,3 +385,14 @@ def filter_labels(labels, chosen):
         return labels
     else:
         return list(map(lambda label: label if label in chosen else '', labels))
+
+def consecutive_differences(mat, axis='r'):
+    if axis[0].lower() == 'r':
+        mat_new = np.empty(np.array(mat.shape) - (1, 0))
+        for i in range(1, mat.shape[0]):
+            mat_new[i-1, :] = mat[i, :] - mat[i-1, :]
+    elif axis[0].lower() == 'c':
+        mat_new = np.empty(np.array(mat.shape) - (0, 1))
+        for i in range(1, mat.shape[1]):
+            mat_new[:, i-1] = mat[:, i] - mat[:, i-1]
+    return mat_new
