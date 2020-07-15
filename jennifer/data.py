@@ -97,3 +97,55 @@ for j in range(svd_df1.shape[0]):
 ax.view_init(25,20)
 ax.legend
 plt.show()
+
+
+# take in reopen parameter
+pop = pd.read_csv("../data/covid data/state_population.csv")
+status = pd.read_csv("../data/covid data/state_reopen.csv")
+covid_pop = covid_num.loc[:,'5/15/20':'7/5/20'].div(pop['pop'],axis=0)
+df_reopen = (covid_pop - covid_pop.mean())/(covid_pop .std())
+
+# SVD
+u1, s1, v1 = np.linalg.svd(df_reopen, full_matrices=True)
+
+# data frame containing the first two singular vectors
+labels= ['SV'+str(i) for i in range(1,3)]
+svd_df = pd.DataFrame(u1[:,0:2], index=state_name.tolist(), columns=labels)
+svd_df=svd_df.reset_index()
+svd_df.rename(columns={'index':'State'}, inplace=True)
+svd_df.head()
+
+svd_df['status'] = status['status']
+# Scatter plot: SV1 and SV2
+sns.scatterplot(x="SV1", y="SV2", hue="status", 
+                data=svd_df, s=100,
+                alpha=0.7)
+for j in range(svd_df.shape[0]):  
+    plt.text(svd_df['SV1'][j],svd_df['SV2'][j],svd_df['State'][j])
+plt.xlabel('SV 1: {0}%'.format(var_explained[0]*100), fontsize=16)
+plt.ylabel('SV 2: {0}%'.format(var_explained[1]*100), fontsize=16)
+
+'''
+status = pd.read_csv("../data/covid data/state_reopen.csv")
+df_reopen = covid_scaled.loc[:,'5/15/20':].values
+# SVD
+u1, s1, v1 = np.linalg.svd(df_reopen, full_matrices=True)
+
+# data frame containing the first two singular vectors
+labels= ['SV'+str(i) for i in range(1,3)]
+svd_df = pd.DataFrame(u1[:,0:2], index=state_name.tolist(), columns=labels)
+svd_df=svd_df.reset_index()
+svd_df.rename(columns={'index':'State'}, inplace=True)
+svd_df.head()
+
+
+svd_df['status'] = status['status']
+# Scatter plot: SV1 and SV2
+sns.scatterplot(x="SV1", y="SV2", hue="status", 
+                data=svd_df, s=100,
+                alpha=0.7)
+for j in range(svd_df.shape[0]):  
+    plt.text(svd_df['SV1'][j],svd_df['SV2'][j],svd_df['State'][j])
+plt.xlabel('SV 1: {0}%'.format(var_explained[0]*100), fontsize=16)
+plt.ylabel('SV 2: {0}%'.format(var_explained[1]*100), fontsize=16)
+'''
