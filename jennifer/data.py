@@ -14,6 +14,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+'''
+# set wd
+import os
+os. chdir('./Documents/GitHub/Randomized-SVD/jennifer')
+'''
+
 # import dataset
 #covid = pd.read_csv("../data/covid data/covid_state.csv")
 covid = pd.read_csv("../data/covid data/covid_state_new.csv")
