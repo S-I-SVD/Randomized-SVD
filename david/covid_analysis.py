@@ -23,7 +23,7 @@ def get_state_deaths(state, days_offset=0, new=False):
     df_state_counties = df_state_deaths['County Name']
 
     state_counties = df_state_counties.values
-    state_deaths = df_state_deaths.loc[:, '1/22/20':].values
+    state_deaths_ = df_state_deaths.loc[:, '1/22/20':].values
 
     if new:
         state_deaths = da.consecutive_differences(state_deaths_)
@@ -99,6 +99,8 @@ def state_cases_svd_plots(fig, state, centering='s', style='lines', chosen=None,
     else:
         ylabel = 'Total Cases'
         state_cases = state_cases_
+        
+    print(state_cases.shape)
 
     if scale == 'log':
         state_cases = np.log(state_cases - np.min(state_cases) + 1)
@@ -117,15 +119,7 @@ def state_cases_svd_plots(fig, state, centering='s', style='lines', chosen=None,
         labels    = da.filter_labels(county_names, chosen) if labels else None
     )
 
-    ax_list = fig.axes
-    '''
-    for ax in ax_list:
-        for date in fl_closure_dates.keys():
-            ax.axvline(x = date, color='red', alpha=.75, linestyle = '--')
-        for date in fl_opening_dates.keys():
-            ax.axvline(x = date, color='blue', alpha=.75, linestyle = '--')
-    '''
-
+    
 
 def state_deaths_svd_plots_four(fig, state, centering='s', style='lines', chosen=None, labels=False):
     state_deaths, county_names = get_state_deaths(state)
@@ -225,6 +219,7 @@ def generate_state_deaths_plots():
 nyc_counties = ['Kings', 'Queens', 'Bronx', 'New York', 'Richmond']
 fl_counties_special = ['Miami-Dade', 'Broward', 'Palm Beach', 'Pinellas']
 fl_counties_beaches = ['Miami-Dade', 'Broward', 'Palm Beach']
+fl_beaches = ['Miami-Dade', 'Broward', 'Palm Beach']
 fl_counties_2 = ['Miami-Dade', 'Broward', 'Palm Beach', 'Orange', 'Hillsborough']
 
 fl_closure_dates = {
@@ -266,14 +261,63 @@ def paper_fl_cases_cumulative_svd_plots():
             dpi=192, layout='landscape')
     fig.show()
 
-def paper_fl_log_cases_cumulative_svd_plots():
+def paper_fl_cases_svd_plots(centering='s', new=False, scale=None):
     fig = plt.figure()
     state_cases_svd_plots(fig=fig, state='fl', days_offset=0, labels=True,
-            chosen=fl_counties_2, scale='log')
+            chosen=fl_beaches, scale=scale, centering=centering, new=new)
+    ax_list = fig.axes
+    for ax in ax_list:
+        for date in fl_closure_dates.keys():
+            ax.axvline(x = date, color='red', alpha=.75, linestyle = '--')
+        for date in fl_opening_dates.keys():
+            ax.axvline(x = date, color='blue', alpha=.75, linestyle = '--')
     fig.set_size_inches(15, 10)
+    fig.savefig('out/covid/cases/fl_log_cases_cumulative_svd_plots.png', bbox_inches='tight', dpi=192, layout='landscape')
+    fig.show()
+
+def log_cases_scree_plot(state, scale=None, new=False):
+    fig, ax = plt.subplots()
+    cases, _ = get_state_cases(state, new=new)
+    svdt.scree_plot(ax, cases, 10, title='Scree Plot: %s COVID-19 Cases' % state.upper(), scale=scale)
+    fig.set_size_inches(5, 5)
     fig.tight_layout()
     #fig.savefig('out/covid/cases/fl_log_cases_cumulative_svd_plots_shift_7.png', bbox_inches='tight', dpi=192, layout='landscape')
     fig.show()
+
+
+def paper_fl_log_cases_scree_plot():
+    fig, ax = plt.subplots()
+    fl_cases, _ = get_state_cases('fl')
+    svdt.scree_plot(ax, fl_cases, 10, title='Scree Plot: Florida COVID-19 Log Cumulative Known Cases', scale='log')
+    fig.set_size_inches(5, 5)
+    fig.tight_layout()
+    fig.savefig('out/covid/cases/fl_log_cases_scree.png', bbox_inches='tight', dpi=192, layout='landscape')
+    fig.show()
+
+def paper_fl_cases_scree_plot():
+    fig, ax = plt.subplots()
+    fl_cases, _ = get_state_cases('fl')
+    svdt.scree_plot(ax, fl_cases, 10, 
+            title='Scree Plot: FL COVID-19 Cumulative Known Cases', 
+            scale='')
+    fig.set_size_inches(5, 5)
+    fig.tight_layout()
+    fig.savefig('out/covid/cases/fl_cases_scree_plot.png', bbox_inches='tight', dpi=192, layout='landscape')
+    fig.show()
+    
+def paper_fl_deaths_scree_plot():
+    fig, ax = plt.subplots()
+    fl_cases, _ = get_state_deaths('fl')
+    svdt.scree_plot(ax, fl_cases, 10, 
+            title='Scree Plot: FL COVID-19 Cumulative Deaths', 
+            scale='')
+    fig.set_size_inches(5, 5)
+    fig.tight_layout()
+    fig.savefig('out/covid/fl_deaths_scree_plot.png', bbox_inches='tight', dpi=192, layout='landscape')
+    fig.show()
+
+
+
 
 
 def paper_fl_cases_new_svd_plots():
