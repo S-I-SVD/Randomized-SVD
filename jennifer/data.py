@@ -14,6 +14,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+'''
+# set wd
+import os
+os. chdir('./Documents/GitHub/Randomized-SVD/jennifer')
+'''
+
 # import dataset
 #covid = pd.read_csv("../data/covid data/covid_state.csv")
 covid = pd.read_csv("../data/covid data/covid_state_new.csv")
@@ -102,11 +108,13 @@ plt.show()
 # take in reopen parameter
 pop = pd.read_csv("../data/covid data/state_population.csv")
 status = pd.read_csv("../data/covid data/state_reopen.csv")
-covid_pop = covid_num.loc[:,'5/15/20':'7/5/20'].div(pop['pop'],axis=0)
-df_reopen = (covid_pop - covid_pop.mean())/(covid_pop .std())
+new = pd.read_csv("../data/covid data/covid_new_cases.csv")
+df_new = new.loc[:,'5/15/20':'7/5/20'].div(pop['pop'],axis=0)
+#covid_pop = covid_num.loc[:,'5/15/20':'7/5/20'].div(pop['pop'],axis=0)
+#df_reopen = (covid_pop - covid_pop.mean())/(covid_pop .std())
 
 # SVD
-u1, s1, v1 = np.linalg.svd(df_reopen, full_matrices=True)
+u1, s1, v1 = np.linalg.svd(df_new, full_matrices=True)
 
 # data frame containing the first two singular vectors
 labels= ['SV'+str(i) for i in range(1,3)]
