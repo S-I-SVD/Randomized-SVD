@@ -131,38 +131,6 @@ def rank_k_approx(x, rank=None, ratio=None, min_energy=None, mode='deterministic
     return u[:, :rank] @ np.diag(s[:rank]) @ vh[:rank, :] + means_mat
 
 '''
-Compresses an image using a low rank approximation. Takes in either the rank of the approximation or the compression ratio.
-'''
-def compress_image(img, ratio=None, rank=None, min_energy=None, mode='deterministic', oversample=0, power_iterations=0):
-    img_type = img.dtype
-    img = img.astype(np.float64)
-        
-    # Stack color channels
-    rows, columns = img.shape[:2] 
-    img_stacked = img.reshape(rows, -1)
-    img_rank = np.linalg.matrix_rank(img_stacked)
-    
-    # Compute rank <rank> approximation of image
-    img_approx_stacked = rank_k_approx(img_stacked, rank=rank, ratio=ratio,
-            oversample=oversample, min_energy=min_energy,
-            mode=mode, power_iterations=power_iterations)
-    img_approx = img_approx_stacked.reshape(rows, columns, -1)
-
-    # Get rid of redundant dimensions
-    if img_approx.shape[2] == 1:
-        img_approx.shape = img_approx.shape[:2]
-
-    print(img_approx)
-    # Handle overflow/underflow issues
-    if np.issubdtype(img_type, np.integer):
-        img_approx = np.clip(img_approx, 0, 255)
-    else:
-        img_approx = np.clip(img_approx, 0, 1)
-
-    img_approx = img_approx.astype(img_type)
-    return img_approx
-
-'''
 Compresses a video using a low rank approximation. Takes in either the rank of the approximation or the compression ratio.
 '''
 def compress_video(video, ratio=None, rank=None, mode='deterministic', oversample=0):
@@ -259,9 +227,12 @@ def svd_cumsum_plot(mat):
 '''
 Display the generalized scree plot (Zhang) 
 '''
-def scree_plot(ax, mat, num_sv, title='Scree Plot'):
+def scree_plot(ax, mat, num_sv, title='Scree Plot', scale=''):
     num_sv = num_sv+1
     ranks = np.arange(1,num_sv)
+
+    if scale == 'log':
+        mat = np.log(mat - np.min(mat) + 1)
 
     def residual_proportion(x, rank, centering):
         x_approx = rank_k_approx(x, rank=rank, centering=centering)
@@ -270,8 +241,10 @@ def scree_plot(ax, mat, num_sv, title='Scree Plot'):
     residual_proportions = dict( [ ( s, [residual_proportion(mat, rank, s) for rank in ranks]) for s in ['s', 'r', 'c', 'd']] )
     
     ax.plot(ranks, residual_proportions['s'], color='black', marker='o')
-    ax.plot(ranks - 1/2, residual_proportions['r'], color='red', marker='o')
-    ax.plot(ranks - 1/2, residual_proportions['c'], color='blue', marker='o')
+    #ax.plot(ranks - 1/2, residual_proportions['r'], color='red', marker='o')
+    #ax.plot(ranks - 1/2, residual_proportions['c'], color='blue', marker='o')
+    ax.plot(ranks, residual_proportions['r'], color='red', marker='o')
+    ax.plot(ranks, residual_proportions['c'], color='blue', marker='o')
     ax.plot(ranks, residual_proportions['d'], color='purple', marker='o')
 
     ax.legend(['SSVD', 'RSVD', 'CSVD', 'DSVD'], loc='upper right')
