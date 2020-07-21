@@ -47,7 +47,7 @@ W_stacked, W_type = im_stack(W)
 
 def watermark_image(im, W, a):
     rows,cols = im.shape[:2]
-    U,S,V = np.linalg.svd(im_stacked,full_matrices = False)
+    U,S,V = np.linalg.svd(im,full_matrices = False)
     Wp = np.pad(W,[(0, rows - W.shape[0]), (0, rows - W.shape[1])])
     Aw = np.diag(S)+a*Wp
     Uw,Sw,Vw = np.linalg.svd(Aw,full_matrices = True)
@@ -55,7 +55,7 @@ def watermark_image(im, W, a):
     return marked, Uw, S, Vw
 
 # show output
-marked, Uw, S, Vw = watermark_image(im, W_stacked,0.1)
+marked, Uw, S, Vw = watermark_image(im_stacked, W_stacked,0.1)
 im_stack_s(marked,im_type)
 
 # extract watermark
