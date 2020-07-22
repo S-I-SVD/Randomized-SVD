@@ -63,7 +63,12 @@ def watermark_image(im, W, a):
     marked = U @ np.diag(Sw) @ V
     return marked, Uw, S, Vw
 
-
+def watermark_extract(marked, Uw, S,Vw, a):
+    Um, Sm, Vm = np.linalg.svd(marked)
+    M = (Uw @ np.diag(Sm) @ Vw - np.diag(S))/a
+    #rows = len(S)
+    #Mp = np.pad(M,[(0, M.shape[0]- rows), (0, M.shape[1] - rows)])
+    return M
     
 # load mp3
 sr, x = read('bach.mp3')
@@ -77,4 +82,9 @@ marked, Uw, S, Vw = watermark_image(mat, W_mat,0.1)
 
 ts,new = sig.istft(marked)
 
-write("bach_w.mp3",W_sr,new)
+write("bach_w.mp3",sr,new)
+
+# extract watermark
+M = watermark_extract(marked, Uw, S, Vw, 0.1)
+ts,new_marked = sig.istft(M)
+write("news3_e.mp3",W_sr, new_marked)
