@@ -11,9 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pydub 
 import scipy.signal as sig
-from pydub import AudioSegment
-from scipy.io import wavfile
-from tempfile import mktemp
+
 
 '''
 # set wd
@@ -41,19 +39,6 @@ def write(f, sr, x, normalized=False):
         y = np.int16(x)
     song = pydub.AudioSegment(y.tobytes(), frame_rate=sr, sample_width=2, channels=channels)
     song.export(f, format="mp3", bitrate="320k")
-    
-def specgraph(data,text):
-    mp3_audio = AudioSegment.from_file(data, format="mp3")  # read mp3
-    wname = mktemp('.wav')  # use temporary file
-    mp3_audio.export(wname, format="wav")  # convert to wav
-    FS, data = wavfile.read(wname)  # read wav file
-    if mp3_audio.channels==2:
-        plt.specgram(data[:,0], Fs=FS, NFFT=128, noverlap=0)  # plot
-        plt.title(text) # label
-    else:
-        plt.specgram(data, Fs=FS, NFFT=128, noverlap=0)  # plot
-        plt.title(text) # label
-    plt.show()
     
 def watermark_image(im, W, a):
     rows,cols = im.shape[:2]
@@ -110,3 +95,12 @@ write("news3_e.mp3",W_sr, new_marked)
 # image as watermark
 Wg = rgb2gray(imageio.imread("dog.jpg"))
 marked, M = watermark(mat, Wg, 0.1)
+
+# scalar
+for a in np.arange(0.1,2,0.1):
+    marked, M = watermark(mat, Wg, a)
+    diff = np.linalg.norm(M-Wg)
+    plt.scatter(a,diff)
+    plt.xlabel('Scalar')
+    plt.ylabel('Norm Difference')
+    plt.show()

@@ -13,16 +13,16 @@ import numpy as np
 '''
 # set wd
 import os
-os. chdir('./Documents/GitHub/Randomized-SVD/jennifer')
+os. chdir('./Documents/GitHub/Randomized-SVD/jennifer/watermark')
 '''
 
 # read in image
 im = imageio.imread("rose.jpg")
 
 # watermark
-W = imageio.imread("hamster.jpg")
+W = imageio.imread("cat.jpg")
 #W = np.random.rand(rows,rows)
-
+Wg = imageio.imread("dog.jpg")
 # scale
 a = 1
 
@@ -43,7 +43,7 @@ def im_stack_s(im, im_type):
     
 im_stacked, im_type = im_stack(im)
 W_stacked, W_type = im_stack(W)
-    
+Wg_stacked, Wg_type = im_stack(Wg)
 
 def watermark_image(im, W, a):
     rows,cols = im.shape[:2]
