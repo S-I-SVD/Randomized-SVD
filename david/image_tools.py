@@ -40,12 +40,14 @@ def embed_watermark(img, watermark, scale=1):
         img_watermarked.shape = img_watermarked.shape[:2]
 
     # Handle overflow/underflow issues
+    '''
     if np.issubdtype(img_type, np.integer):
         img_watermarked = np.clip(img_watermarked, 0, 255)
     else:
         img_watermarked = np.clip(img_watermarked, 0, 1)
+    '''
 
-    img_watermarked = img_watermarked.astype(img_type)
+    #img_watermarked = img_watermarked.astype(img_type)
     return img_watermarked, watermarked_u, mat_s, watermarked_vh
 
 '''
@@ -85,12 +87,14 @@ def extract_watermark(img_watermarked, watermarked_u, mat_s, watermarked_vh, sca
         watermark.shape = watermark.shape[:2]
 
     # Handle overflow/underflow issues
+    '''
     if np.issubdtype(img_type, np.integer):
         watermark = np.clip(watermark, 0, 255)
     else:
         watermark = np.clip(watermark, 0, 1)
+    '''
 
-    watermark = watermark.astype(img_type)
+    #watermark = watermark.astype(img_type)
     if size is None:
         return watermark
     else:
@@ -175,6 +179,86 @@ def extract_watermark_jain(img_watermarked, img_original, watermark_vh, scale, s
         return watermark
     else:
         return watermark[:size[0], :size[1]]
+
+
+
+def embed_watermark_jain_mod(img, watermark, scale=1):
+    img_type = img.dtype
+    #watermark_type = watermark.dtype
+    img = img.astype(np.float64)
+    watermark = watermark.astype(np.float64)
+    watermark = pad_image(watermark, img.shape)
+        
+    # Stack color channels
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    watermark_rows, watermark_columns = watermark.shape[:2] 
+    watermark_stacked = watermark.reshape(watermark_rows, -1)
+    
+    # Embed watermark in image
+    img_watermarked_stacked, watermark_vh = wm.embed_watermark_jain_mod(img_stacked, watermark_stacked, scale)
+    img_watermarked = img_watermarked_stacked.reshape(img_rows, img_columns, -1)
+
+    # Get rid of redundant dimensions
+    if img_watermarked.shape[2] == 1:
+        img_watermarked.shape = img_watermarked.shape[:2]
+
+    # Handle overflow/underflow issues
+    '''
+    if np.issubdtype(img_type, np.integer):
+        img_watermarked = np.clip(img_watermarked, 0, 255)
+    else:
+        img_watermarked = np.clip(img_watermarked, 0, 1)
+    '''
+    print(watermark_vh.dtype)
+
+    #img_watermarked = img_watermarked.astype(img_type)
+    #watermark_vh = watermark_vh.astype(watermark_type)
+    return img_watermarked, watermark_vh
+
+
+'''
+Extract a watermark from an image using the Jain algorithm
+'''
+def extract_watermark_jain_mod(img_watermarked, img_original, watermark_vh, scale, size=None):
+    #watermark_type = watermark_vh.dtype
+    #img_type = img_watermarked.dtype
+        
+    # Stack color channels
+    img_rows, img_columns = img_watermarked.shape[:2] 
+    img_watermarked = img_watermarked.astype(np.float64)
+    img_watermarked_stacked = img_watermarked.reshape(img_rows, -1)
+
+    orig_rows, orig_columns = img_original.shape[:2] 
+    img_original = img_original.astype(np.float64)
+    img_original_stacked = img_original.reshape(orig_rows, -1)
+
+    #watermark_vh = watermark_vh.astype(np.float64)
+    
+    # Extract watermark
+    watermark_stacked = wm.extract_watermark_jain_mod(img_watermarked_stacked, img_original_stacked, watermark_vh, scale=scale)
+    watermark = watermark_stacked.reshape(img_rows, img_columns, -1)
+
+    # Get rid of redundant dimensions
+    if watermark.shape[2] == 1:
+        watermark.shape = watermark.shape[:2]
+
+    # Handle overflow/underflow issues
+    '''
+    if np.issubdtype(watermark_type, np.integer):
+        watermark = np.clip(watermark, 0, 255)
+    else:
+        watermark = np.clip(watermark, 0, 1)
+    '''
+
+    #watermark = watermark.astype(watermark_type)
+
+    if size == None:
+        return watermark
+    else:
+        return watermark[:size[0], :size[1]]
+
+
 
 '''
 Apply a function to a colored image, automatically handling dtype and 

@@ -76,6 +76,41 @@ def extract_watermark_jain(mat_watermarked, mat_original, watermark_vh, scale):
     return watermark_pcs @ watermark_vh
 
 
+
+def embed_watermark_jain_mod(mat, watermark, scale=1):
+    mat_rows, mat_columns = mat.shape
+    watermark_rows, watermark_columns = watermark.shape
+
+    if mat_rows < watermark_rows or mat_columns < watermark_columns:
+        print('Watermark must be smaller than matrix')
+        return
+
+    mat_u, mat_s, mat_vh = la.svd(mat)
+    mat_num_sv = len(mat_s)
+    
+    # Compute the rectangular "diagonal" singular value matrix
+    mat_s_matrix = np.pad(np.diag(mat_s), 
+            [(0, mat_rows - mat_num_sv), (0, mat_columns - mat_num_sv)])
+
+    # Pad watermark to match the sizes
+    watermark_padded = np.pad(watermark, 
+            [(0, mat_rows - watermark_rows), (0, mat_columns - watermark_columns)])
+
+    watermark_u, watermark_s, watermark_vh = la.svd(watermark_padded)
+    watermark_num_sv = len(watermark_s)
+    watermark_rows, watermark_columns = mat.shape
+
+    watermark_s_matrix = np.pad(np.diag(watermark_s), [(0, watermark_rows - watermark_num_sv), (0, watermark_columns - watermark_num_sv)])
+
+    mat_watermarked = mat + scale * watermark_u @ watermark_s_matrix @ mat_vh
+    
+    return mat_watermarked, watermark_vh
+
+def extract_watermark_jain_mod(mat_watermarked, mat_original, watermark_vh, scale):
+    mat_u, mat_s, mat_vh = la.svd(mat_original)
+    return (mat_watermarked - mat_original) @ la.inv(mat_vh) @ watermark_vh / scale
+
+
 def extract_watermark(mat_watermarked, watermarked_u, mat_s_matrix, watermarked_vh, scale):
     _, watermarked_s, _ = la.svd(mat_watermarked)
     mat_watermarked_rows, mat_watermarked_cols = mat_watermarked.shape
