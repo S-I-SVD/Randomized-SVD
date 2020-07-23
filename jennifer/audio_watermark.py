@@ -6,13 +6,12 @@ Created on Tue Jul 21 12:52:21 2020
 @author: jenzyy
 """
 
+import imageio
 import matplotlib.pyplot as plt
 import numpy as np
 import pydub 
 import scipy.signal as sig
-from pydub import AudioSegment
-from scipy.io import wavfile
-from tempfile import mktemp
+
 
 '''
 # set wd
@@ -41,19 +40,6 @@ def write(f, sr, x, normalized=False):
     song = pydub.AudioSegment(y.tobytes(), frame_rate=sr, sample_width=2, channels=channels)
     song.export(f, format="mp3", bitrate="320k")
     
-def specgraph(data,text):
-    mp3_audio = AudioSegment.from_file(data, format="mp3")  # read mp3
-    wname = mktemp('.wav')  # use temporary file
-    mp3_audio.export(wname, format="wav")  # convert to wav
-    FS, data = wavfile.read(wname)  # read wav file
-    if mp3_audio.channels==2:
-        plt.specgram(data[:,0], Fs=FS, NFFT=128, noverlap=0)  # plot
-        plt.title(text) # label
-    else:
-        plt.specgram(data, Fs=FS, NFFT=128, noverlap=0)  # plot
-        plt.title(text) # label
-    plt.show()
-    
 def watermark_image(im, W, a):
     rows,cols = im.shape[:2]
     U,S,V = np.linalg.svd(im,full_matrices = False)
@@ -69,7 +55,24 @@ def watermark_extract(marked, Uw, S,Vw, a):
     #rows = len(S)
     #Mp = np.pad(M,[(0, M.shape[0]- rows), (0, M.shape[1] - rows)])
     return M
-    
+
+def watermark(im, W, a):
+    rows,cols = im.shape[:2]
+    U,S,V = np.linalg.svd(im,full_matrices = False)
+    Wp = np.pad(W,[(0, rows - W.shape[0]), (0, rows - W.shape[1])])
+    Aw = np.diag(S)+a*Wp
+    Uw,Sw,Vw = np.linalg.svd(Aw,full_matrices = True)
+    marked = U @ np.diag(Sw) @ V
+    # extract watermark
+    Um, Sm, Vm = np.linalg.svd(marked)
+    M = (Uw @ np.diag(Sm) @ Vw - np.diag(S))/a
+    Mrow, Mcol = W.shape
+    M = M[:Mrow, :Mcol]
+    return marked, M
+
+def rgb2gray(rgb):
+    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+
 # load mp3
 sr, x = read('bach.mp3')
 W_sr, W_x = read('news3.mp3')
@@ -80,11 +83,24 @@ f,t,W_mat = sig.stft(W_x[:,0])
 # Watermark
 marked, Uw, S, Vw = watermark_image(mat, W_mat,0.1)
 
+# reformat
 ts,new = sig.istft(marked)
-
 write("bach_w.mp3",sr,new)
 
 # extract watermark
 M = watermark_extract(marked, Uw, S, Vw, 0.1)
 ts,new_marked = sig.istft(M)
 write("news3_e.mp3",W_sr, new_marked)
+
+# image as watermark
+Wg = rgb2gray(imageio.imread("dog.jpg"))
+marked, M = watermark(mat, Wg, 0.1)
+
+# scalar
+for a in np.arange(0.1,2,0.1):
+    marked, M = watermark(mat, Wg, a)
+    diff = np.linalg.norm(M-Wg)
+    plt.scatter(a,diff)
+    plt.xlabel('Scalar')
+    plt.ylabel('Norm Difference')
+    plt.show()

@@ -25,11 +25,11 @@ for k in[1,10,100,849]:
     plt.show()
 
 
-#def rgb2gray(rgb):
-#    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
-#X = rgb2gray(im)
-#U, S, V = np.linalg.svd(X, full_matrices=False)
-#for k in [1,10,100, 849]:
-#    approx = U @ np.diag(S)[:, :k] @ V[:k, :]
-#    plt.imshow(approx, cmap = "gray")
- #   plt.show()
+def rgb2gray(rgb):
+    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+X = rgb2gray(im)
+U, S, V = np.linalg.svd(X, full_matrices=False)
+for k in [1,10,100, 849]:
+    approx = U @ np.diag(S)[:, :k] @ V[:k, :]
+    plt.imshow(approx, cmap = "gray")
+    plt.show()
