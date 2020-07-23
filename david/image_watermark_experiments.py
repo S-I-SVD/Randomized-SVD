@@ -1,5 +1,7 @@
 import numpy as np
 import numpy.linalg as la
+import scipy as sp
+import scipy.sparse
 import matplotlib.pyplot as plt
 
 import svd_tools as svdt
@@ -175,6 +177,27 @@ def test_watermark_jain(scale=1):
     
     plt.show()
 
+def test_watermark_jain_perturb(scale=0.01):
+    img = np.asarray(Image.open('res/images/raccoon.jpg'))
+    watermark = np.asarray(Image.open('res/images/redpanda.jpg'))
+
+    img_watermarked, watermark_vh = embed_watermark_jain(img, watermark, scale)
+    perturbation = np.random.normal(scale=1, size=img_watermarked.shape)
+    watermark_extracted = extract_watermark_jain(img_watermarked + perturbation, img, watermark_vh, scale)
+
+    img_watermarked = np.clip(np.floor(img_watermarked + perturbation), 0, 255).astype(np.uint8)
+    watermark_extracted = np.clip(watermark_extracted, 0, 255).astype(np.uint8)
+
+    fig, axs = plt.subplots(2, 2)
+
+    axs[0, 0].imshow(img); axs[0, 0].axis('off'); axs[0,0].set_title('Original')
+    axs[0, 1].imshow(watermark); axs[0, 1].axis('off'); axs[0,1].set_title('Watermark')
+    axs[1, 0].imshow(img_watermarked.astype(np.uint8)); axs[1, 0].axis('off'); axs[1,0].set_title('Watermarked Image')
+    axs[1, 1].imshow(watermark_extracted.astype(np.uint8)); axs[1, 1].axis('off'); axs[1,1].set_title('Extracted Watermark')
+    
+    plt.show()
+
+
 def test_wrong_watermark_jain(scale=0.01):
     raccoon = np.asarray(Image.open('res/images/raccoon.jpg'))
     redpanda = np.asarray(Image.open('res/images/redpanda.jpg'))
@@ -200,6 +223,33 @@ def test_wrong_watermark_jain(scale=0.01):
     fig.tight_layout()
     
     plt.show()
+
+def test_wrong_watermark_jain_mod(scale=0.01):
+    raccoon = np.asarray(Image.open('res/images/raccoon.jpg'))
+    redpanda = np.asarray(Image.open('res/images/redpanda.jpg'))
+    fox = np.asarray(Image.open('res/images/fox.jpg'))
+
+    raccoon_wm_redpanda, redpanda_vh = embed_watermark_jain_mod(raccoon, redpanda, scale)
+    raccoon_wm_fox, fox_vh = embed_watermark_jain_mod(raccoon, fox, scale)
+    fox_extracted_wrong = extract_watermark_jain_mod(raccoon_wm_redpanda, raccoon, fox_vh, scale)
+
+    raccoon_wm_redpanda = np.clip(np.floor(raccoon_wm_redpanda), 0, 255).astype(np.uint8)
+    fox_extracted_wrong = np.clip(fox_extracted_wrong, 0, 255).astype(np.uint8)
+
+    fig, axs = plt.subplots(2, 3)
+
+    axs[0, 0].imshow(raccoon); axs[0, 0].axis('off'); axs[0,0].set_title('Original')
+    axs[0, 1].imshow(redpanda); axs[0, 1].axis('off'); axs[0,1].set_title('Watermark')
+    axs[0, 2].imshow(fox); axs[0, 2].axis('off'); axs[0,2].set_title('Wrong Watermark')
+    axs[1, 0].imshow(raccoon_wm_redpanda); axs[1, 0].axis('off'); axs[1,0].set_title('Image Watermarked with Red Panda')
+    axs[1,1].axis('off')
+    axs[1, 2].imshow(fox_extracted_wrong); axs[1, 2].axis('off'); axs[1,2].set_title('Fox Watermark Extracted')
+
+    fig.set_size_inches(10, 15)
+    fig.tight_layout()
+    
+    plt.show()
+
 
 def test_wrong_watermark_liutan(scale=0.01):
     raccoon = np.asarray(Image.open('res/images/raccoon.jpg'))
@@ -281,8 +331,6 @@ def test_watermark_jain(scale=1):
     watermark_extracted = extract_watermark_jain(mat_watermarked, mat, watermark_vh,
             scale=scale)
     watermark_extracted = watermark_extracted[:watermark_size[0], :watermark_size[1]]
-    print(la.norm(mat_watermarked - mat))
-    print(la.norm(watermark - watermark_extracted))
 
 def test_watermark_jain_round(scale=1):
     watermark_size = (7,7)
@@ -313,6 +361,7 @@ def plot_watermark_perturb_errors_sparse(scale=1, min_mult=1, max_mult=20, num_p
         size=(128,128)):
     mults = np.linspace(min_mult, max_mult, num_points)
     relative_errors_jain = np.empty_like(mults)
+    relative_errors_jain_mod = np.empty_like(mults)
     relative_errors_liutan = np.empty_like(mults)
 
     #mat = np.asarray(Image.open('res/images/raccoon.jpg').convert('L')).astype(np.float64)
@@ -322,6 +371,7 @@ def plot_watermark_perturb_errors_sparse(scale=1, min_mult=1, max_mult=20, num_p
 
     # Embed watermark
     mat_watermarked_jain, vh_jain = embed_watermark_jain(mat, watermark, scale)
+    mat_watermarked_jain_mod, vh_jain_mod = embed_watermark_jain_mod(mat, watermark, scale)
     mat_watermarked_liutan, u_liutan, s_liutan, vh_liutan = embed_watermark(mat, watermark, scale)
 
     # Perturb watermarked matrix
@@ -334,12 +384,18 @@ def plot_watermark_perturb_errors_sparse(scale=1, min_mult=1, max_mult=20, num_p
                 mat, vh_jain, scale)
         relative_errors_jain[i] = la.norm(watermark - watermark_extracted_jain) / la.norm(watermark)
 
+        watermark_extracted_jain_mod = extract_watermark_jain_mod(mat_watermarked_jain_mod + perturbation, 
+                mat, vh_jain_mod, scale)
+        relative_errors_jain_mod[i] = la.norm(watermark - watermark_extracted_jain_mod) / la.norm(watermark)
+
         watermark_extracted_liutan = extract_watermark(mat_watermarked_liutan + perturbation, 
                 u_liutan, s_liutan, vh_liutan, scale)
         relative_errors_liutan[i] = la.norm(watermark - watermark_extracted_liutan) / la.norm(watermark)
 
+
     fig, ax = plt.subplots()
-    ax.plot(mults, relative_errors_jain, label='Jain')
+    #ax.plot(mults, relative_errors_jain, label='Jain')
+    ax.plot(mults, relative_errors_jain_mod, label='Jain Mod')
     ax.plot(mults, relative_errors_liutan, label='LiuTan')
     ax.legend()
     ax.set_title('Relative Errors in Watermark Extraction from Perturbed Image')
@@ -355,6 +411,7 @@ def plot_watermark_perturb_errors_random(scale=1, min_stddev=.1, max_stddev=2, n
         size=(128,128)):
     std_devs = np.linspace(min_stddev, max_stddev, num_points)
     relative_errors_jain = np.empty_like(std_devs)
+    relative_errors_jain_mod = np.empty_like(std_devs)
     relative_errors_liutan = np.empty_like(std_devs)
 
     #mat = np.asarray(Image.open('res/images/raccoon.jpg').convert('L')).astype(np.float64)
@@ -364,6 +421,7 @@ def plot_watermark_perturb_errors_random(scale=1, min_stddev=.1, max_stddev=2, n
 
     # Embed watermark
     mat_watermarked_jain, vh_jain = embed_watermark_jain(mat, watermark, scale)
+    mat_watermarked_jain_mod, vh_jain_mod = embed_watermark_jain_mod(mat, watermark, scale)
     mat_watermarked_liutan, u_liutan, s_liutan, vh_liutan = embed_watermark(mat, watermark, scale)
 
     # Perturb watermarked matrix
@@ -374,12 +432,17 @@ def plot_watermark_perturb_errors_random(scale=1, min_stddev=.1, max_stddev=2, n
                 mat, vh_jain, scale)
         relative_errors_jain[i] = la.norm(watermark - watermark_extracted_jain) / la.norm(watermark)
 
+        watermark_extracted_jain_mod = extract_watermark_jain_mod(mat_watermarked_jain_mod + perturbation, 
+                mat, vh_jain_mod, scale)
+        relative_errors_jain_mod[i] = la.norm(watermark - watermark_extracted_jain_mod) / la.norm(watermark)
+
         watermark_extracted_liutan = extract_watermark(mat_watermarked_liutan + perturbation, 
                 u_liutan, s_liutan, vh_liutan, scale)
         relative_errors_liutan[i] = la.norm(watermark - watermark_extracted_liutan) / la.norm(watermark)
 
     fig, ax = plt.subplots()
     ax.plot(std_devs, relative_errors_jain, label='Jain')
+    ax.plot(std_devs, relative_errors_jain_mod, label='Jain Mod')
     ax.plot(std_devs, relative_errors_liutan, label='LiuTan')
     ax.legend()
     ax.set_title('Relative Errors in Watermark Extraction from Perturbed Image')
