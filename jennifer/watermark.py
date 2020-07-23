@@ -22,9 +22,9 @@ im = imageio.imread("rose.jpg")
 # watermark
 W = imageio.imread("cat.jpg")
 #W = np.random.rand(rows,rows)
-Wg = imageio.imread("dog.jpg")
+Wp = imageio.imread("dog.jpg")
 # scale
-a = 1
+a = 0.1
 
 def im_stack(im):
     im_type = im.dtype
@@ -43,7 +43,7 @@ def im_stack_s(im, im_type):
     
 im_stacked, im_type = im_stack(im)
 W_stacked, W_type = im_stack(W)
-Wg_stacked, Wg_type = im_stack(Wg)
+Wp_stacked, Wp_type = im_stack(Wp)
 
 def watermark_image(im, W, a):
     rows,cols = im.shape[:2]
@@ -71,3 +71,10 @@ M = watermark_extract(marked, Uw, S, Vw, a)
 Mrow, Mcol = W_stacked.shape
 M = M[:Mrow, :Mcol]
 im_stack_s(M, W_type)
+
+# extract wrong watermark
+marked_p, Uw_p, S_p, Vw_p = watermark_image(im_stacked, Wp_stacked,0.1)
+Mp = watermark_extract(marked, Uw_p, S, Vw_p, a)
+Mprow, Mpcol = Wp_stacked.shape
+Mp = Mp[:Mprow, :Mpcol]
+im_stack_s(Mp, Wp_type)
