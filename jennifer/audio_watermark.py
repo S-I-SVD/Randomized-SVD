@@ -135,3 +135,12 @@ for a in np.arange(0.1,2,0.1):
     marked, _,_,_ = watermark_image(mat, W_mat,a)
     ts,new = sig.istft(marked)
     write("bach_w_a_"+str(a)+".mp3",sr,new)
+    
+# experiment
+sr, x4 = read('bach_w_nonoise.mp3')
+f,t,mat4 = sig.stft(x4[:,0])
+mat4 = mat4[:,:5928]
+# extract watermark
+M = watermark_extract(mat4, Uw, S, Vw, 0.4)
+ts,new_marked = sig.istft(M)
+write("news_e_nonoise.mp3",W_sr, new_marked)
