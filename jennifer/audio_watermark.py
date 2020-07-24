@@ -11,7 +11,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pydub 
 import scipy.signal as sig
-
+from pydub import AudioSegment
+from scipy.io import wavfile
+from tempfile import mktemp
 
 '''
 # set wd
@@ -80,6 +82,20 @@ def watermark(im, W, a):
     Mrow, Mcol = W.shape
     M = M[:Mrow, :Mcol]
     return marked, M
+
+def specgraph(data,text):
+    mp3_audio = AudioSegment.from_file(data, format="mp3")  # read mp3
+    wname = mktemp('.wav')  # use temporary file
+    mp3_audio.export(wname, format="wav")  # convert to wav
+    FS, data = wavfile.read(wname)  # read wav file
+    if mp3_audio.channels==2:
+        plt.specgram(data[:,0], Fs=FS, NFFT=128, noverlap=0)  # plot
+        plt.title(text) # label
+    else:
+        plt.specgram(data, Fs=FS, NFFT=128, noverlap=0)  # plot
+        plt.title(text) # label
+    plt.show()
+    
 
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
