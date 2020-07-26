@@ -96,6 +96,19 @@ def specgraph(data,text):
         plt.title(text) # label
     plt.show()
     
+def ampgraph(data,text):
+    sample_rate, snd = read(data)
+    # convert to mono
+    if snd.ndim > 1:
+        snd_mono = 1/2 * (snd[:,0] + snd[:,1])
+    else:
+        snd_mono = snd
+    num_samples = snd_mono.size
+    plt.plot(np.arange(num_samples) / sample_rate, snd_mono)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
+    plt.title(text)
+    plt.show()
 
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
