@@ -21,8 +21,8 @@ os. chdir('./Documents/GitHub/Randomized-SVD/jennifer')
 '''
 
 # import dataset
-#covid = pd.read_csv("../data/covid data/covid_state.csv")
-covid = pd.read_csv("../data/covid data/covid_state_new.csv")
+covid = pd.read_csv("../data/covid data/covid_state.csv")
+#covid = pd.read_csv("../data/covid data/covid_state_new.csv")
 
 # clean data
 state_name = covid['State']
@@ -63,6 +63,36 @@ for j in range(svd_df.shape[0]):
     plt.text(svd_df['SV1'][j],svd_df['SV2'][j],svd_df['State'][j])
 plt.xlabel('SV 1: {0}%'.format(var_explained[0]*100), fontsize=16)
 plt.ylabel('SV 2: {0}%'.format(var_explained[1]*100), fontsize=16)
+
+
+
+
+# projection
+svd_dv = pd.DataFrame(v[:,0:2])
+df_p  = df_covid @ svd_dv
+lab = pd.Series(['SV'+str(i) for i in range(1,3)])
+df_p = df_p.rename(index = state_name, columns = lab)
+df_p = df_p.reset_index()
+df_p.rename(columns={'index':'State'}, inplace=True)
+#region
+state = pd.read_csv("../data/covid data/state_region.csv")
+df_p['region'] = state['region']
+# plot projected scatterplot
+sns.scatterplot(x="SV1", y="SV2",
+                data=df_p, s=100,
+                alpha=0.7)
+for j in range(svd_df.shape[0]):  
+    plt.text(df_p['SV1'][j],df_p['SV2'][j],svd_df['State'][j])
+plt.xlabel('SV 1: {0}%'.format(var_explained[0]*100), fontsize=16)
+plt.ylabel('SV 2: {0}%'.format(var_explained[1]*100), fontsize=16)
+
+
+
+
+
+
+
+
 
 # data frame containing the first three singular values
 labels1= ['SV'+str(i) for i in range(1,4)]
