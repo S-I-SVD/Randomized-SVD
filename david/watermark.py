@@ -38,7 +38,7 @@ def embed_watermark(mat, watermark, scale=1):
 
     return mat_watermarked, watermarked_u, mat_s_matrix, watermarked_vh
 
-def embed_watermark_jain(mat, watermark, scale=1):
+def embed_watermark_jain(mat, watermark, scale=1, term=False):
     mat_rows, mat_columns = mat.shape
     watermark_rows, watermark_columns = watermark.shape
 
@@ -66,8 +66,12 @@ def embed_watermark_jain(mat, watermark, scale=1):
     mat_s_matrix_watermarked = mat_s_matrix + scale * watermark_pcs
 
     mat_watermarked = mat_u @ mat_s_matrix_watermarked @ mat_vh
-    
-    return mat_watermarked, watermark_vh
+    jain_term = mat_u @ watermark_u @ watermark_s_matrix @ mat_vh
+
+    if term:
+        return mat_watermarked, watermark_vh, jain_term
+    else:
+        return mat_watermarked, watermark_vh
 
 def extract_watermark_jain(mat_watermarked, mat_original, watermark_vh, scale):
     mat_u, mat_s, mat_vh = la.svd(mat_original)
@@ -77,7 +81,7 @@ def extract_watermark_jain(mat_watermarked, mat_original, watermark_vh, scale):
 
 
 
-def embed_watermark_jain_mod(mat, watermark, scale=1):
+def embed_watermark_jain_mod(mat, watermark, scale=1, term=False):
     mat_rows, mat_columns = mat.shape
     watermark_rows, watermark_columns = watermark.shape
 
@@ -103,6 +107,13 @@ def embed_watermark_jain_mod(mat, watermark, scale=1):
     watermark_s_matrix = np.pad(np.diag(watermark_s), [(0, watermark_rows - watermark_num_sv), (0, watermark_columns - watermark_num_sv)])
 
     mat_watermarked = mat + scale * watermark_u @ watermark_s_matrix @ mat_vh
+    jain_mod_term = watermark_u @ watermark_s_matrix @ mat_vh
+
+    if term:
+        return mat_watermarked, watermark_vh, jain_mod_term
+    else:
+        return mat_watermarked, watermark_vh
+
     
     return mat_watermarked, watermark_vh
 

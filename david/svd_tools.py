@@ -207,22 +207,41 @@ def centered_svd(x, centering=None, full_matrices=False, mode='deterministic', o
         return compressed_svd(x_centered, rank=rank, oversample=oversample)
 
 
-
-'''
-Displays a log-plot of the singular values of the input matrix
-'''
-def svd_log_plot(mat):
+def sv_plot(mat, fname=None, show=False, log=False):
+    fig, ax = plt.subplots()
     u, s, v = np.linalg.svd(mat, full_matrices=False)
-    plt.plot(np.arange(s.size)+1,np.log(s)/np.log(10), 'ro')
-    plt.show()
+    if log:
+        ax.plot(np.arange(s.size)+1, np.log(1+s), 'ro')
+    else:
+        ax.plot(np.arange(s.size)+1, s, 'ro')
+    ax.set_ylabel(r'$\log(1+\sigma_n)$')
+    ax.set_xlabel('n')
+    if fname != None:
+        fig.set_size_inches(3, 3)
+        fig.tight_layout()
+        fig.savefig(fname, bbox_inches='tight')
 
+    if show:
+        ax.show()
+    
 '''
 Displays a cumulative sum plot of the singular values of the input matrix
 '''
-def svd_cumsum_plot(mat):
+def sv_cumsum_plot(mat, fname=None, show=False):
+    fig, ax = plt.subplots()
     u, s, v = np.linalg.svd(mat, full_matrices=False)
-    plt.plot(1 + np.arange(s.size), [sum(s[0:i]) for i in range(0,s.size)] / sum(s), 'ro')
-    plt.show()
+    ax.plot(1 + np.arange(s.size), [sum(s[0:i]) for i in range(0,s.size)] / sum(s), 'ro')
+    ax.set_ylabel('Cumulative Sum Proportion')
+    ax.set_xlabel('Number of Singular Values')
+    if fname != None:
+        fig.set_size_inches(3, 3)
+        fig.tight_layout()
+        fig.savefig(fname, bbox_inches='tight')
+
+    if show:
+        plt.show()
+    else:
+        plt.close(fig)
 
 '''
 Display the generalized scree plot (Zhang) 

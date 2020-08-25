@@ -261,8 +261,8 @@ def paper_fl_cases_cumulative_svd_plots():
             dpi=192, layout='landscape')
     fig.show()
 
-def paper_fl_cases_svd_plots(centering='s', new=False, scale=None):
-    fig = plt.figure()
+def paper_fl_cases_svd_plots(fig, centering='s', new=False, scale=None):
+    #fig = plt.figure()
     state_cases_svd_plots(fig=fig, state='fl', days_offset=0, labels=True,
             chosen=fl_beaches, scale=scale, centering=centering, new=new)
     ax_list = fig.axes
@@ -271,9 +271,9 @@ def paper_fl_cases_svd_plots(centering='s', new=False, scale=None):
             ax.axvline(x = date, color='red', alpha=.75, linestyle = '--')
         for date in fl_opening_dates.keys():
             ax.axvline(x = date, color='blue', alpha=.75, linestyle = '--')
-    fig.set_size_inches(15, 10)
-    fig.savefig('out/covid/cases/fl_log_cases_cumulative_svd_plots.png', bbox_inches='tight', dpi=192, layout='landscape')
-    fig.show()
+    #fig.set_size_inches(15, 10)
+    #fig.savefig('out/covid/cases/fl_log_cases_cumulative_svd_plots.png', bbox_inches='tight', dpi=192, layout='landscape')
+    #fig.show()
 
 def log_cases_scree_plot(state, scale=None, new=False):
     fig, ax = plt.subplots()

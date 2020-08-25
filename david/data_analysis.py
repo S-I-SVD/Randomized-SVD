@@ -184,7 +184,7 @@ def svd_plots(fig, data, title, xlabel, ylabel, zlabel='', centering='s', style=
                             )
     svd_approx_plot( ax = p_approx,
                      data      = data,
-                     rank      = 3,
+                     rank      = 2,
                      xlabel    = xlabel,
                      ylabel    = ylabel,
                      zlabel    = zlabel,
@@ -195,7 +195,7 @@ def svd_plots(fig, data, title, xlabel, ylabel, zlabel='', centering='s', style=
                    )
     svd_residual_plot( ax = p_residuals,
                        data      = data,
-                       rank      = 3,
+                       rank      = 2,
                        xlabel    = xlabel,
                        ylabel    = ylabel,
                        zlabel    = zlabel,
@@ -357,7 +357,7 @@ def svd_plots_five(fig, data, title, xlabel, ylabel, zlabel='', centering='s', s
                             )
     svd_approx_plot( ax = p_approx,
                      data      = data,
-                     rank      = 3,
+                     rank      = 2,
                      xlabel    = xlabel,
                      ylabel    = ylabel,
                      zlabel    = zlabel,
@@ -368,7 +368,7 @@ def svd_plots_five(fig, data, title, xlabel, ylabel, zlabel='', centering='s', s
                    )
     svd_residual_plot( ax = p_residuals,
                        data      = data,
-                       rank      = 3,
+                       rank      = 2,
                        xlabel    = xlabel,
                        ylabel    = ylabel,
                        zlabel    = zlabel,
