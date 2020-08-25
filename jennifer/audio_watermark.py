@@ -11,7 +11,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pydub 
 import scipy.signal as sig
-
+from pydub import AudioSegment
+from scipy.io import wavfile
+from tempfile import mktemp
 
 '''
 # set wd
@@ -42,40 +44,78 @@ def write(f, sr, x, normalized=False):
     
 def watermark_image(im, W, a):
     rows,cols = im.shape[:2]
-    U,S,V = np.linalg.svd(im,full_matrices = False)
-    Wp = np.pad(W,[(0, rows - W.shape[0]), (0, rows - W.shape[1])])
-    Aw = np.diag(S)+a*Wp
+    U,S,V = np.linalg.svd(im,full_matrices = True)
+    r = len(S)
+    Sd = np.pad(np.diag(S), [(0, rows - r), (0, cols - r)])
+    Wp = np.pad(W,[(0, rows - W.shape[0]), (0, cols - W.shape[1])])
+    Aw = Sd+a*Wp
     Uw,Sw,Vw = np.linalg.svd(Aw,full_matrices = True)
-    marked = U @ np.diag(Sw) @ V
+    Swd = np.pad(np.diag(Sw), [(0, rows - r), (0, cols - r)])
+    marked = U @ Swd @ V
     return marked, Uw, S, Vw
 
 def watermark_extract(marked, Uw, S,Vw, a):
+    # reshape variables
+    rows, cols = marked.shape
+    r = len(S)
+    Sd = np.pad(np.diag(S), [(0, rows - r), (0, cols - r)])
+    # extraction
     Um, Sm, Vm = np.linalg.svd(marked)
-    M = (Uw @ np.diag(Sm) @ Vw - np.diag(S))/a
-    #rows = len(S)
-    #Mp = np.pad(M,[(0, M.shape[0]- rows), (0, M.shape[1] - rows)])
+    Smd = np.pad(np.diag(Sm), [(0, rows - r), (0, cols - r)])
+    M = (Uw @ Smd @ Vw - Sd)/a
     return M
 
 def watermark(im, W, a):
     rows,cols = im.shape[:2]
-    U,S,V = np.linalg.svd(im,full_matrices = False)
-    Wp = np.pad(W,[(0, rows - W.shape[0]), (0, rows - W.shape[1])])
-    Aw = np.diag(S)+a*Wp
+    U,S,V = np.linalg.svd(im,full_matrices = True)
+    r = len(S)
+    Sd = np.pad(np.diag(S), [(0, rows - r), (0, cols - r)])
+    Wp = np.pad(W,[(0, rows - W.shape[0]), (0, cols - W.shape[1])])
+    Aw = Sd+a*Wp
     Uw,Sw,Vw = np.linalg.svd(Aw,full_matrices = True)
-    marked = U @ np.diag(Sw) @ V
+    Swd = np.pad(np.diag(Sw), [(0, rows - r), (0, cols - r)])
+    marked = U @ Swd @ V
     # extract watermark
     Um, Sm, Vm = np.linalg.svd(marked)
-    M = (Uw @ np.diag(Sm) @ Vw - np.diag(S))/a
+    Smd = np.pad(np.diag(Sm), [(0, rows - r), (0, cols - r)])
+    M = (Uw @ Smd @ Vw - Sd)/a
     Mrow, Mcol = W.shape
     M = M[:Mrow, :Mcol]
     return marked, M
+
+def specgraph(data,text):
+    mp3_audio = AudioSegment.from_file(data, format="mp3")  # read mp3
+    wname = mktemp('.wav')  # use temporary file
+    mp3_audio.export(wname, format="wav")  # convert to wav
+    FS, data = wavfile.read(wname)  # read wav file
+    if mp3_audio.channels==2:
+        plt.specgram(data[:,0], Fs=FS, NFFT=128, noverlap=0)  # plot
+        plt.title(text) # label
+    else:
+        plt.specgram(data, Fs=FS, NFFT=128, noverlap=0)  # plot
+        plt.title(text) # label
+    plt.show()
+    
+def ampgraph(data,text):
+    sample_rate, snd = read(data)
+    # convert to mono
+    if snd.ndim > 1:
+        snd_mono = 1/2 * (snd[:,0] + snd[:,1])
+    else:
+        snd_mono = snd
+    num_samples = snd_mono.size
+    plt.plot(np.arange(num_samples) / sample_rate, snd_mono)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
+    plt.title(text)
+    plt.show()
 
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 # load mp3
 sr, x = read('bach.mp3')
-W_sr, W_x = read('news3.mp3')
+W_sr, W_x = read('news.mp3')
 
 f,t,mat = sig.stft(x[:,0])
 f,t,W_mat = sig.stft(W_x[:,0])
@@ -96,11 +136,24 @@ write("news3_e.mp3",W_sr, new_marked)
 Wg = rgb2gray(imageio.imread("dog.jpg"))
 marked, M = watermark(mat, Wg, 0.1)
 
-# scalar
+# frobenius norm differences for extracted watermark
+diffs = []
 for a in np.arange(0.1,2,0.1):
     marked, M = watermark(mat, Wg, a)
     diff = np.linalg.norm(M-Wg)
-    plt.scatter(a,diff)
-    plt.xlabel('Scalar')
-    plt.ylabel('Norm Difference')
-    plt.show()
+    diffs.append(diff)
+
+# system output
+for a in np.arange(0.1,2,0.1):
+    marked, _,_,_ = watermark_image(mat, W_mat,a)
+    ts,new = sig.istft(marked)
+    write("bach_w_a_"+str(a)+".mp3",sr,new)
+    
+# experiment
+sr, x4 = read('bach_w_nonoise.mp3')
+f,t,mat4 = sig.stft(x4[:,0])
+mat4 = mat4[:,:5928]
+# extract watermark
+M = watermark_extract(mat4, Uw, S, Vw, 0.4)
+ts,new_marked = sig.istft(M)
+write("news_e_nonoise.mp3",W_sr, new_marked)
