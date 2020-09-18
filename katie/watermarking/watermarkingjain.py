@@ -19,11 +19,7 @@ from matplotlib.image import imread
 from skimage import color
 from skimage import io
 from watermarkingliutan import *
-from watermarktoold import *
-coffee = imageio.imread(r'/Users/katie/Downloads/coffee.png')
-cat = imageio.imread(r'/Users/katie/opt/anaconda3/pkgs/scikit-image-0.15.0-py37h0a44026_0/lib/python3.7/site-packages/skimage/data/eye.png')
-cat=cat[:,:,:-1]
-randommatrix = np.random.rand(600,600)
+from watermarktools import *
 
 def watermarkimage_jain(M,a,W):
     #SVD
@@ -156,7 +152,7 @@ def extractedwatermark_jain(M, a, W,random):
     shape = watermark_jain_A_wa_dimensions(M_stacked,a,W_stacked)
     extractedwatermark = extractwatermark_jain(watermarkedimagestacked,M_stacked,vt_w,a,shape)
     extractedwatermark = reversepad(extractedwatermark,W_stacked)
-    if random == 0
+    if random == 0:
         extractedwatermark = extractedwatermark.reshape(r_W,c_W,-1)
         if np.issubdtype(W_type, np.integer):
             extractedwatermark = np.clip(extractedwatermark, 0, 255)
@@ -212,7 +208,7 @@ def extractedwatermarkdifferencecropped_jain(M, a, W,cropped,showimage,random):
     extractedwatermarkcropped = extractwatermark_jain(cropped_padded,M_stacked,vt_w,a)
     extractedwatermarkcropped = reversepad(extractedwatermarkcropped,W_stacked)
     #what to return
-     if showimage==1:
+    if showimage==1:
         if random == 0:
             extractedwatermarkcroppedimage = extractedwatermarkcropped.reshape(r_W,c_W,-1)
             if np.issubdtype(W_type, np.integer):
@@ -334,7 +330,7 @@ def extractedwatermarkdifferencecropped_jain(M, a, W,cropped,showimage,random):
     extractedwatermarkcropped = extractwatermark_jain(cropped_padded,M_stacked,vt_w,a,shape)
     extractedwatermarkcropped = reversepad(extractedwatermarkcropped,W_stacked)
     #what to return
-     if showimage==1:
+    if showimage==1:
         if random == 0:
             extractedwatermarkcroppedimage = extractedwatermarkcropped.reshape(r_W,c_W,-1)
             if np.issubdtype(W_type, np.integer):
@@ -358,7 +354,7 @@ def cropplots_jain(M,a,W,random):
     M_left = M_W[:,100:,:]
     axs[0,0].imshow(coffeeleft)
     axs[0,0].set_title("100 Columns Removed from Left")
-    M_left_extracted = extractedwatermarkdifferencecropped_jain(M, a, W,M_left,showimage=1,random)
+    M_left_extracted = extractedwatermarkdifferencecropped_jain(M, a, W,M_left,random,showimage=1)
     if random == 1:
         axs[0,1].imshow(M_left_extracted,cmap='gray')
     else:
@@ -368,7 +364,7 @@ def cropplots_jain(M,a,W,random):
     M_right = M_W[:,:-100,:]
     axs[1,0].imshow(coffeeright)
     axs[1,0].set_title("100 Columns Removed from Right")
-    M_right_extracted = extractedwatermarkdifferencecropped_jain(M, a, W,M_right,showimage=1,random)
+    M_right_extracted = extractedwatermarkdifferencecropped_jain(M, a, W,M_right,random,showimage=1)
     if random == 1:
         axs[1,1].imshow(M_right_extracted,cmap='gray')
     else:
@@ -378,7 +374,7 @@ def cropplots_jain(M,a,W,random):
     M_bottom = M_W[:-100,:,:]
     axs[2,0].imshow(coffeebottom)
     axs[2,0].set_title("100 Rows Removed from Bottom")
-    M_bottom_extracted = extractedwatermarkdifferencecropped_jain(M, a, W,M_bottom,showimage=1,random)
+    M_bottom_extracted = extractedwatermarkdifferencecropped_jain(M, a, W,M_bottom,random,showimage=1)
     if random == 1:
         axs[2,1].imshow(M_bottom_extracted,cmap='gray')
     else:
@@ -388,7 +384,7 @@ def cropplots_jain(M,a,W,random):
     M_top = M_W[100:,:,:]
     axs[3,0].imshow(M_top)
     axs[3,0].set_title("100 Rows Removed from Top")
-    M_top_extracted = extractedwatermarkdifferencecropped_jain(M, a, W,M_top,showimage=1,random)
+    M_top_extracted = extractedwatermarkdifferencecropped_jain(M, a, W,M_top,random,showimage=1)
     if random == 1:
         axs[3,1].imshow(M_top_extracted,cmap='gray')
     else:
