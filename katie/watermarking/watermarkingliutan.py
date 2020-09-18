@@ -19,11 +19,8 @@ import svd as svd
 from matplotlib.image import imread
 from skimage import color
 from skimage import io
+from watermarktools import *
 
-coffee = imageio.imread(r'/Users/katie/Downloads/coffee.png')
-cat = imageio.imread(r'/Users/katie/opt/anaconda3/pkgs/scikit-image-0.15.0-py37h0a44026_0/lib/python3.7/site-packages/skimage/data/eye.png')
-cat=cat[:,:,:-1]
-randommatrix = np.random.rand(600,600)
 
 def watermarkimage_liutan(M, a, W): #M is matrix, a is scaling factor, W is watermark
     #SVD
@@ -117,7 +114,7 @@ def perceptibility_liutan(M,a,W): #returns difference between watermarked image 
     W_stacked = W.reshape(-1,c_W)
     W_type = W.dtype
     #watermark embedding
-    watermarkedimagestacked = watermarkimage(M_stacked, a, W_stacked)
+    watermarkedimagestacked = watermarkimage_liutan(M_stacked, a, W_stacked)
     watermarkedimage = watermarkedimagestacked.reshape(r_M, c_M, -1)
     watermarkedimagestacked = watermarkedimage.reshape(-1,c_M)
     #error
@@ -197,10 +194,10 @@ def extractedwatermarkdifferencecropped_liutan(M, a, W,cropped,showimage,random)
     #padding the cropped image to give it the same dimensions as M_stacked
     cropped_padded = padimage(cropped_stacked,M_stacked)
     #extracting the watermark
-    extractedwatermarkcropped = extractwatermark(cropped_padded,U_W,S,VT_W,a)
+    extractedwatermarkcropped = extractwatermark_liutan(cropped_padded,U_W,S,VT_W,a)
     extractedwatermarkcropped = reversepad(extractedwatermarkcropped,W_stacked)
     #what to return
-     if showimage==1:
+    if showimage==1:
         if random == 0:
             extractedwatermarkcroppedimage = extractedwatermarkcropped.reshape(r_W,c_W,-1)
             if np.issubdtype(W_type, np.integer):
@@ -305,28 +302,28 @@ def cropplots(M,a,W,random):
     M_left = M_W[:,100:,:]
     axs[0,0].imshow(coffeeleft)
     axs[0,0].set_title("100 Columns Removed from Left")
-    M_left_extracted = extractedwatermarkdifferencecropped_liutan(M, a, W,M_left,showimage=1,random)
+    M_left_extracted = extractedwatermarkdifferencecropped_liutan(M, a, W,M_left,random,showimage=1)
     axs[0,1].imshow(M_left_extracted)
     axs[0,1].set_title("Extracted Watermark")
     #50 columns removed from right
     M_right = M_W[:,:-100,:]
     axs[1,0].imshow(coffeeright)
     axs[1,0].set_title("100 Columns Removed from Right")
-    M_right_extracted = extractedwatermarkdifferencecropped_liutan(M, a, W,M_right,showimage=1,random)
+    M_right_extracted = extractedwatermarkdifferencecropped_liutan(M, a, W,M_right,random,showimage=1)
     axs[1,1].imshow(M_right_extracted)
     axs[1,1].set_title("Extracted Watermark")
     #50 rows removed from bottom
     M_bottom = M_W[:-100,:,:]
     axs[2,0].imshow(coffeebottom)
     axs[2,0].set_title("100 Rows Removed from Bottom")
-    M_bottom_extracted = extractedwatermarkdifferencecropped_liutan(M, a, W,M_bottom,showimage=1,random)
+    M_bottom_extracted = extractedwatermarkdifferencecropped_liutan(M, a, W,M_bottom,random,showimage=1)
     axs[2,1].imshow(M_bottom_extracted)
     axs[2,1].set_title("Extracted Watermark")
     #50 rows removed from top
     M_top = M_W[100:,:,:]
     axs[3,0].imshow(M_top)
     axs[3,0].set_title("100 Rows Removed from Top")
-    M_top_extracted = extractedwatermarkdifferencecropped_liutan(M, a, W,M_top,showimage=1,random)
+    M_top_extracted = extractedwatermarkdifferencecropped_liutan(M, a, W,M_top,random,showimage=1)
     axs[3,1].imshow(M_top_extracted)
     axs[3,1].set_title("Extracted Watermark")
     fig.tight_layout(pad=1.0)
@@ -364,7 +361,7 @@ def extractedwatermark_liutan(M, a, W,random):
     U_W, S, VT_W = importantwatermarkelements_liutan(M_stacked, a, W_stacked)
     extractedwatermark = extractwatermark_liutan(watermarkedimagestacked,U_W,S,VT_W,a)
     extractedwatermark = reversepad(extractedwatermark,W_stacked)
-    if random == 0
+    if random == 0:
         extractedwatermark = extractedwatermark.reshape(r_W,c_W,-1)
         if np.issubdtype(W_type, np.integer):
             extractedwatermark = np.clip(extractedwatermark, 0, 255)
@@ -408,7 +405,7 @@ def differentscalingfactorplots_liutan(M,W,random):
         axs[2,1].imshow(W150)
     axs[2,1].set_title("Extracted Watermark")
     #scaling factor 2
-    M200 = watermarkonly_jainmod(M, 2,W)
+    M200 = watermarkonly_liutan(M, 2,W)
     axs[3,0].imshow(M200)
     axs[3,0].set_title("Watermarked Image: a = 2")
     W200 = extractedwatermark_liutan(M, 2,W,random)
@@ -431,7 +428,7 @@ def lowranknormdifference_liutan(M, a, W,k,showimage,random):
     W_stacked = W.reshape(-1,c_W)
     W_type = W.dtype
     #watermarking
-    watermarkedimagestacked = watermarkimage_jainmod(M_stacked, a, W_stacked)
+    watermarkedimagestacked = watermarkimage_liutan(M_stacked, a, W_stacked)
     U_W, S, VT_W = importantwatermarkelements_liutan(M_stacked, a, W_stacked)
     lowrankwatermarkedimage = lowrankapprox(watermarkedimagestacked,k)
     watermarkedimage = lowrankwatermarkedimage.reshape(r_M, c_M, -1)
