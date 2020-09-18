@@ -18,14 +18,9 @@ import svd as svd
 from matplotlib.image import imread
 from skimage import color
 from skimage import io
-from watermarking import *
-from watermarkjain import * 
-from watermarkjainmod import *
-
-coffee = imageio.imread(r'/Users/katie/Downloads/coffee.png')
-cat = imageio.imread(r'/Users/katie/opt/anaconda3/pkgs/scikit-image-0.15.0-py37h0a44026_0/lib/python3.7/site-packages/skimage/data/eye.png')
-cat=cat[:,:,:-1]
-randommatrix = np.random.rand(600,600)
+from watermarkingliutan import *
+from watermarkingjain import * 
+from watermarkingjainmod import *
 
 def watermarkedplot(M,W,plottype,random):
     alphas = np.arange(0.05,2.05,0.05)
@@ -33,24 +28,24 @@ def watermarkedplot(M,W,plottype,random):
     #liu tan
     if plottype == 1:
         for alpha in alphas:
-            difference = perceptibility_liutan(M,alpha,W,0,random)
+            difference = perceptibility_liutan(M,alpha,W)
             differences.append(difference)
     #jain
     if plottype == 2:
         for alpha in alphas:
-            difference = perceptibility_jain(M,alpha,W,0,random)
+            difference = perceptibility_jain(M,alpha,W)
             differences.append(difference)
             
     #jain mod
     if plottype == 3:
         for alpha in alphas:
-            difference = perceptibility_jainmod(M,alpha,W,0,random)
+            difference = perceptibility_jainmod(M,alpha,W)
             differences.append(difference)
     
     drawgraph_difference(alphas,differences,random)
         
         
-def extractedwatermarkplot(M,W,plottype):
+def extractedwatermarkplot(M,W,plottype,random):
     alphas = np.arange(0.05,2.05,0.05)
     differences = []
     #liu tan
@@ -70,7 +65,7 @@ def extractedwatermarkplot(M,W,plottype):
             difference = extractedwatermarkdifference_jainmod(M,alpha,W)
             differences.append(difference)
     
-    drawgraph_watermarkdifference(alphas,differences)
+    drawgraph_watermarkdifference(alphas,differences,random)
 
 def cropplotcolumn(M,a,W,plottype,random):
     columns = np.arange(0,201,1)
@@ -105,7 +100,7 @@ def cropplotrow(M,a,W,plottype,random):
     differences = []
     #liutan
     if plottype == 1:
-        M1 = watermarkonly(M,a,W)
+        M1 = watermarkonly_liutan(M,a,W)
         for row in rows:
             M1 = M1[:-1,:,:]
             difference = extractedwatermarkdifferencecropped_liutan(M,a,W,M1,0,random)
@@ -125,7 +120,7 @@ def cropplotrow(M,a,W,plottype,random):
             difference = extractedwatermarkdifferencecropped_jainmod(M,a,W,M1,0,random)
             differences.append(difference)  
             
-    drawgraph_cropdifferencerow(rows,differences)
+    drawgraph_cropdifferencerow(rows,differences,a,random)
     
 
 def drawgraph_difference(x,y,random):
