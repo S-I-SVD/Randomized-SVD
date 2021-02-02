@@ -10,12 +10,12 @@ import numpy as np
 import os
 import imageio
 from timeit import timeit
-from mpl_toolkits import mplot3d
 import scipy
 
 img = imageio.imread('imageio:chelsea.png')
 
 def regularSVD(M):
+    
     #stacking
     M_type = M.dtype
     r, c = M.shape[:2]
@@ -30,8 +30,10 @@ def regularSVD(M):
 def regSVDapprox(M, r): 
     U, S, VT = np.linalg.svd(M, full_matrices=False)
     S = np.diag(S)
+    
     # Construct approximate image from U, S, VT with rank k
     M_approx = U[:,:r] @ S[0:r,:r] @ VT[:r,:]
+    
     return M_approx
 
 def rSVDapprox(M,r,poweriterations,oversample):
@@ -360,6 +362,7 @@ def regcompressmatrix_2(M, k,j): #modified
     return M_approx.astype(M_type)
 
 def regcompressmatrix_modified(M, k,a,b): 
+    
     #type
     M_type = M.dtype
     
