@@ -18,21 +18,30 @@ from image_tools import *
 
 #images
 
-img = imageio.imread('imageio:chelsea.png')
+rainbow = imageio.imread('../res/rainbow.png')
+view = imageio.imread('../res/view.png')
 
-noodles = imageio.imread(r'/Users/katie/Downloads/noodles.png')
+#example = regcompressmatrix_2(rainbow,rainbow.shape[1],2)
+#example1 = regcompressmatrix_2(view,view.shape[1],2)
 
-geese = imageio.imread(r'/Users/katie/Downloads/geese.png')
-
-hawaii = imageio.imread(r'/Users/katie/Downloads/hawaii.png')
-
-example = regcompressmatrix_2(img, 50,4)
-
-plt.imshow(example)
-
-Image.fromarray(example).convert('RGB').save('../out/example.png', 'PNG')
+#Image.fromarray(example).convert('RGB').save('../out/example.png', 'PNG')
+#Image.fromarray(example1).convert('RGB').save('../out/example1.png', 'PNG')
 
 print(hawaii.shape)
 
-#def sigmamod_multiply(M, r, a):
+def paper_sigmamod_multiply(M, a): #code producing figures in SIURO Paper
+    modified = regcompressmatrix_2(M,M.shape[1],a)
+    Image.fromarray(modified).convert('RGB').save('../out/sigmas_mod/sigmas_mod_multiply/sigmas_mod_multiply_{}.png'.format(a), 'PNG')
     
+paper_sigmamod_multiply(view, 0.1)
+paper_sigmamod_multiply(view, 0.5)
+paper_sigmamod_multiply(view, 0.01)
+paper_sigmamod_multiply(view, 0.75)
+paper_sigmamod_multiply(view, 0.9)
+paper_sigmamod_multiply(view, 1.1)
+paper_sigmamod_multiply(view, 1.25)
+paper_sigmamod_multiply(view, 1.5)
+paper_sigmamod_multiply(view, 1.75)
+paper_sigmamod_multiply(view, 2)
+paper_sigmamod_multiply(view, 4)
+paper_sigmamod_multiply(view, 3)
