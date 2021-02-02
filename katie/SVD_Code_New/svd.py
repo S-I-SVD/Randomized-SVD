@@ -361,6 +361,37 @@ def regcompressmatrix_2(M, k,j): #modified
         
     return M_approx.astype(M_type)
 
+def regcompressmatrix_add(M, k,j): #modified, adding a scalar
+    #type
+    M_type = M.dtype
+    #stacking color channels
+    r, c = M.shape[:2]
+    M_stacked = M.reshape(-1, c)
+    M_rank = np.linalg.matrix_rank(M_stacked)
+    
+    #SVD
+    U, S, VT = np.linalg.svd(M_stacked, full_matrices=False)
+    length_S = len(S)
+    for i in range(length_S):
+        S[i] = S[i] + j
+    S = np.diag(S)
+    
+    # Construct approximate image from U, S, VT with rank k
+    M_approx_stacked = U[:,:k] @ S[0:k,:k] @ VT[:k,:]
+    M_approx = M_approx_stacked.reshape(r, c, -1)
+    
+    #dimension issues
+    if M_approx.shape[2] == 1:
+        M_approx.shape = M_approx.shape[:2] #should output a two dimensional matrix
+        
+    #overflow/underflow issues with color
+    if np.issubdtype(M_type, np.integer):
+        M_approx = np.clip(M_approx, 0, 255)
+    else:
+        M_approx = np.clip(M_approx, 0, 1)
+        
+    return M_approx.astype(M_type)
+
 def regcompressmatrix_modified(M, k,a,b): 
     
     #type
