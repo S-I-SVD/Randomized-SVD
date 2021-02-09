@@ -8,7 +8,7 @@ Created on Mon Feb  8 20:40:41 2021
 import numpy as np
 import numpy.linalg as la
 import matplotlib.pyplot as plt
-import svd_tools as svdt
+import svd_tools_copy as svdt
 import scipy as sp
 import scipy.sparse
 import svd_tools_copy as svdt
@@ -96,12 +96,12 @@ def extract_watermark(img_watermarked, watermarked_u, mat_s, watermarked_vh, sca
         watermark.shape = watermark.shape[:2]
 
     # Handle overflow/underflow issues
-    '''
+    
     if np.issubdtype(img_type, np.integer):
         watermark = np.clip(watermark, 0, 255)
     else:
         watermark = np.clip(watermark, 0, 1)
-    '''
+   
 
     #watermark = watermark.astype(img_type)
     if size is None:
