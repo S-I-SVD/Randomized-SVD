@@ -7,24 +7,23 @@ from mpl_toolkits import mplot3d
 from svd import *
 from PIL import Image
 import png
-
-
-import sys
-
-sys.path.append('/Users/katie/Documents/GitHub/Randomized-SVD/david')
-import image_watermark_experiments.py
-
-#import svd_tools as svdt
-#import watermark as wm
-
-#test_watermark_jain_mod_rotate()
-
+import svd_tools_copy as svdt
+import image_tools_copy as it
 
 #import ../../../david/watermark as watermarktools
 
-sunset = imageio.imread('../res/sunset.png')
-rainbow = imageio.imread('../res/rainbow.png')
-view = imageio.imread('../res/view.png')
+#sunset = it.load_image('../res/sunset.png')
+#rainbow = it.load_image('../res/rainbow.png')
+#view = it.load_image('../res/view.png')
+
+view = it.load_image('../res/view.png')
+tree = it.load_image('../res/tree.png')
+
+#sunset_f = sunset.astype(np.float64)
+#rainbow_f = rainbow.astype(np.float64)
+#
+#raccoon = load_image('res/public/raccoon.jpg')
+#fox = load_image('res/public/fox.jpg')
 #
 #def extraction_error(mat, watermark, scale):
 #
@@ -36,5 +35,21 @@ view = imageio.imread('../res/view.png')
 #            scale=scale, mode=mode, rank=rank)
 #    
 #      mat_watermarked, watermarked_u, mat_s_matrix, watermarked_vh watermarktool.embed_watermark(mat, watermark, scale)
-def load_image(path, dtype=np.uint8):
-    return np.asarray(Image.open(path)).astype(dtype)
+
+
+#EXTRACTION ERROR = NORM(ORIGINAL WATERMARK - EXTRACTED WATERMARK)
+#1. COMPUTE EMBEDDING AND EXTRACTION
+#2. COMPUTE NORM(ORIGINAL WATERMARK - EXTRACTED WATERMARK)/NORM(ORIGINAL WATERMARK)
+
+def extraction_error(scheme):
+    if scheme=='liutan':
+        img_watermarked, u, s, vh = it.embed_watermark(view, tree)
+    elif scheme =='jain':
+        print("hi")
+        #PUT JAIN CODE
+    else: #JAINMOD
+        print("hello")
+    
+extraction_error('liutan')
+extraction_error('jain')
+extraction_error('jainmod')
