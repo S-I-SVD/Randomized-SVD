@@ -59,29 +59,67 @@ def extraction_error(scheme, scale=1):
         #PUT JAIN CODE
     else: #JAINMOD
         print("hello")
-    
-#extraction_error('liutan')
-#extraction_error('jain')
-#extraction_error('jainmod')
+        
+def reversepad(watermark_extracted,original_watermark):
+    sizes = original_watermark.shape
+    watermark_extracted = watermark_extracted[:sizes[0],:sizes[1]]
+    return watermark_extracted
 
-def test_watermark(scale=1):
-    img = np.asarray(Image.open('../res/view.jpg'))
-    watermark = np.asarray(Image.open('../res/tree.jpg'))
-    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, 
-            scale=scale)
+def watermark_embed_liutan(img, watermark, scale, save):
+    #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/liutan
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
+    if save=='no':
+        return img_watermarked
+    elif save=='yes':
+        Image.fromarray(img_watermarked).convert('RGB').save('../out/watermarking/watermarked_image/liutan/watermarked_image_alpha_{}.png'.format(scale), 'PNG')
+    
+def watermark_extract_liutan(img, watermark, scale, save):
+    #embeds watermark into image and then extracts the watermark. if save == 'yes', then it will save to out/res/watermark
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
     watermark_extracted = it.extract_watermark(img_watermarked, watermarked_u, mat_s, watermarked_vh,
             scale=scale)
-    plt.imshow(watermark_extracted)
-    plt.show()
+    watermark_extracted_final = reversepad(watermark_extracted, watermark)
+    if save=='no':
+        return watermark_extracted_final
+    elif save=='yes':
+        Image.fromarray(watermark_extracted_final).convert('RGB').save('../out/watermarking/extracted_watermark/liutan/extracted_watermark_alpha_{}.png'.format(scale), 'PNG')
     
-test_watermark()
+def watermark_embed_jain(img, watermark, scale, save):
+    #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jain
+    img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
+    if save=='no':
+        return img_watermarked
+    elif save=='yes':
+        Image.fromarray(img_watermarked).convert('RGB').save('../out/watermarking/watermarked_image/jain/watermarked_image_alpha_{}.png'.format(scale), 'PNG')
+    
+        
+def watermark_extract_jain(img, watermark, scale, save):
+    #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jain
+    img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
+    watermark_extracted = it.extract_watermark(img_watermarked, img, watermark_vh, scale)
+    watermark_extracted_final = reversepad(watermark_extracted, watermark)
+    if save=='no':
+        return watermark_extracted_final
+    elif save=='yes':
+        Image.fromarray(watermark_extracted_final).convert('RGB').save('../out/watermarking/extracted_watermark/jain/extracted_watermark_alpha_{}.png'.format(scale), 'PNG')
+    
+def watermark_embed_jain_mod(img, watermark, scale, save):
+    #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jainmod
+    img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
+    if save=='no':
+        return img_watermarked
+    elif save=='yes':
+        Image.fromarray(img_watermarked).convert('RGB').save('../out/watermarking/watermarked_image/jainmod/watermarked_image_alpha_{}.png'.format(scale), 'PNG')
+    
+def watermark_extract_jain__mod(img, watermark, scale, save):
+    #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jainmod
+    img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
+    watermark_extracted = it.extract_watermark_jain_mod(img_watermarked, img, watermark_vh, scale)
+    watermark_extracted_final = reversepad(watermark_extracted, watermark)
+    if save=='no':
+        return watermark_extracted_final
+    elif save=='yes':
+        Image.fromarray(watermark_extracted_final).convert('RGB').save('../out/watermarking/extracted_watermark/jainmod/extracted_watermark_alpha_{}.png'.format(scale), 'PNG')
 
-#def test_watermark(mode='randomized', rank=10, scale=1):
-#    img = np.asarray(Image.open('res/images/raccoon.jpg'))
-#    watermark = np.asarray(Image.open('res/images/redpanda.jpg'))
-#    img_watermarked, watermarked_u, mat_s, watermarked_vh = embed_watermark(img, watermark, 
-#            scale=scale)
-#    watermark_extracted = extract_watermark(img_watermarked, watermarked_u, mat_s, watermarked_vh,
-#            scale=scale, mode=mode, rank=rank)
-#    plt.imshow(watermark_extracted)
-#    plt.show()
+watermark_extract_liutan(view, tree, 0.05, 'yes')
+watermark_embed_liutan(view, tree, 0.05, 'yes')

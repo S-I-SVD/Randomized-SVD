@@ -30,6 +30,7 @@ def compress_image(img, ratio=None, rank=None, min_energy=None, mode='determinis
 Embed a watermark in an image using the Liu & Tan algorithm
 '''
 def embed_watermark(img, watermark, scale=1):
+    
     img_type = img.dtype
     img = img.astype(np.float64)
     watermark = watermark.astype(np.float64)
@@ -49,16 +50,14 @@ def embed_watermark(img, watermark, scale=1):
         img_watermarked.shape = img_watermarked.shape[:2]
 
     # Handle overflow/underflow issues
-    '''
+    
     if np.issubdtype(img_type, np.integer):
         img_watermarked = np.clip(img_watermarked, 0, 255)
     else:
         img_watermarked = np.clip(img_watermarked, 0, 1)
-    '''
 
-    #img_watermarked = img_watermarked.astype(img_type)
+    img_watermarked = img_watermarked.astype(img_type)
     return img_watermarked, watermarked_u, mat_s, watermarked_vh
-
 '''
 Extract a watermark from an image using the Liu & Tan algorithm
 '''
@@ -103,7 +102,7 @@ def extract_watermark(img_watermarked, watermarked_u, mat_s, watermarked_vh, sca
         watermark = np.clip(watermark, 0, 1)
    
 
-    #watermark = watermark.astype(img_type)
+    watermark = watermark.astype(img_type)
     if size is None:
         return watermark
     else:
