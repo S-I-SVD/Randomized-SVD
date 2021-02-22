@@ -114,7 +114,7 @@ Embed a watermark in an image using the Jain algorithm
 '''
 def embed_watermark_jain(img, watermark, scale=1, term=False):
     img_type = img.dtype
-    #watermark_type = watermark.dtype
+    watermark_type = watermark.dtype
     img = img.astype(np.float64)
     watermark = watermark.astype(np.float64)
     watermark = pad_image(watermark, img.shape)
@@ -139,15 +139,12 @@ def embed_watermark_jain(img, watermark, scale=1, term=False):
         img_watermarked.shape = img_watermarked.shape[:2]
 
     # Handle overflow/underflow issues
-    '''
     if np.issubdtype(img_type, np.integer):
         img_watermarked = np.clip(img_watermarked, 0, 255)
     else:
         img_watermarked = np.clip(img_watermarked, 0, 1)
-    '''
-
-    #img_watermarked = img_watermarked.astype(img_type)
-    #watermark_vh = watermark_vh.astype(watermark_type)
+    img_watermarked = img_watermarked.astype(img_type)
+    watermark_vh = watermark_vh.astype(watermark_type)
     if term:
         return img_watermarked, watermark_vh, jain_term
     else:
@@ -157,8 +154,8 @@ def embed_watermark_jain(img, watermark, scale=1, term=False):
 Extract a watermark from an image using the Jain algorithm
 '''
 def extract_watermark_jain(img_watermarked, img_original, watermark_vh, scale, size=None):
-    #watermark_type = watermark_vh.dtype
-    #img_type = img_watermarked.dtype
+    watermark_type = watermark_vh.dtype
+    img_type = img_watermarked.dtype
         
     # Stack color channels
     img_rows, img_columns = img_watermarked.shape[:2] 
@@ -180,14 +177,12 @@ def extract_watermark_jain(img_watermarked, img_original, watermark_vh, scale, s
         watermark.shape = watermark.shape[:2]
 
     # Handle overflow/underflow issues
-    '''
     if np.issubdtype(watermark_type, np.integer):
         watermark = np.clip(watermark, 0, 255)
     else:
         watermark = np.clip(watermark, 0, 1)
-    '''
 
-    #watermark = watermark.astype(watermark_type)
+    watermark = watermark.astype(watermark_type)
 
     if size == None:
         return watermark
@@ -198,7 +193,7 @@ def extract_watermark_jain(img_watermarked, img_original, watermark_vh, scale, s
 
 def embed_watermark_jain_mod(img, watermark, scale=1, term=False):
     img_type = img.dtype
-    #watermark_type = watermark.dtype
+    watermark_type = watermark.dtype
     img = img.astype(np.float64)
     watermark = watermark.astype(np.float64)
     watermark = pad_image(watermark, img.shape)
@@ -223,15 +218,14 @@ def embed_watermark_jain_mod(img, watermark, scale=1, term=False):
         img_watermarked.shape = img_watermarked.shape[:2]
 
     # Handle overflow/underflow issues
-    '''
+
     if np.issubdtype(img_type, np.integer):
         img_watermarked = np.clip(img_watermarked, 0, 255)
     else:
         img_watermarked = np.clip(img_watermarked, 0, 1)
-    '''
 
-    #img_watermarked = img_watermarked.astype(img_type)
-    #watermark_vh = watermark_vh.astype(watermark_type)
+    img_watermarked = img_watermarked.astype(img_type)
+    watermark_vh = watermark_vh.astype(watermark_type)
     if term:
         return img_watermarked, watermark_vh, jain_mod_term
     else:
@@ -242,8 +236,8 @@ def embed_watermark_jain_mod(img, watermark, scale=1, term=False):
 Extract a watermark from an image using the Jain algorithm
 '''
 def extract_watermark_jain_mod(img_watermarked, img_original, watermark_vh, scale, size=None):
-    #watermark_type = watermark_vh.dtype
-    #img_type = img_watermarked.dtype
+    watermark_type = watermark_vh.dtype
+    img_type = img_watermarked.dtype
         
     # Stack color channels
     img_rows, img_columns = img_watermarked.shape[:2] 
@@ -265,14 +259,13 @@ def extract_watermark_jain_mod(img_watermarked, img_original, watermark_vh, scal
         watermark.shape = watermark.shape[:2]
 
     # Handle overflow/underflow issues
-    '''
+
     if np.issubdtype(watermark_type, np.integer):
         watermark = np.clip(watermark, 0, 255)
     else:
         watermark = np.clip(watermark, 0, 1)
-    '''
 
-    #watermark = watermark.astype(watermark_type)
+    watermark = watermark.astype(watermark_type)
 
     if size == None:
         return watermark

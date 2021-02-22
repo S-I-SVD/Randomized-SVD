@@ -96,7 +96,7 @@ def watermark_embed_jain(img, watermark, scale, save):
 def watermark_extract_jain(img, watermark, scale, save):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jain
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
-    watermark_extracted = it.extract_watermark(img_watermarked, img, watermark_vh, scale)
+    watermark_extracted = it.extract_watermark_jain(img_watermarked, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
     if save=='no':
         return watermark_extracted_final
@@ -111,7 +111,7 @@ def watermark_embed_jain_mod(img, watermark, scale, save):
     elif save=='yes':
         Image.fromarray(img_watermarked).convert('RGB').save('../out/watermarking/watermarked_image/jainmod/watermarked_image_alpha_{}.png'.format(scale), 'PNG')
     
-def watermark_extract_jain__mod(img, watermark, scale, save):
+def watermark_extract_jain_mod(img, watermark, scale, save):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jainmod
     img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     watermark_extracted = it.extract_watermark_jain_mod(img_watermarked, img, watermark_vh, scale)
@@ -120,6 +120,42 @@ def watermark_extract_jain__mod(img, watermark, scale, save):
         return watermark_extracted_final
     elif save=='yes':
         Image.fromarray(watermark_extracted_final).convert('RGB').save('../out/watermarking/extracted_watermark/jainmod/extracted_watermark_alpha_{}.png'.format(scale), 'PNG')
+        
+
 
 watermark_extract_liutan(view, tree, 0.05, 'yes')
+watermark_extract_liutan(view, tree, 0.25, 'yes')
+watermark_extract_liutan(view, tree, 0.5, 'yes')
+watermark_extract_liutan(view, tree, 0.75, 'yes')
+watermark_extract_liutan(view, tree, 1, 'yes')
+
+
 watermark_embed_liutan(view, tree, 0.05, 'yes')
+watermark_embed_liutan(view, tree, 0.25, 'yes')
+watermark_embed_liutan(view, tree, 0.5, 'yes')
+watermark_embed_liutan(view, tree, 0.75, 'yes')
+watermark_embed_liutan(view, tree, 1, 'yes')
+
+watermark_embed_jain(view, tree, 0.05, 'yes')
+watermark_embed_jain(view, tree, 0.25, 'yes')
+watermark_embed_jain(view, tree, 0.5, 'yes')
+watermark_embed_jain(view, tree, 0.75, 'yes')
+watermark_embed_jain(view, tree, 1, 'yes')
+
+watermark_extract_jain(view, tree, 0.05, 'yes')
+watermark_extract_jain(view, tree, 0.25, 'yes')
+watermark_extract_jain(view, tree, 0.5, 'yes')
+watermark_extract_jain(view, tree, 0.75, 'yes')
+watermark_extract_jain(view, tree, 1, 'yes')
+
+watermark_embed_jain_mod(view, tree, 0.05, 'yes')
+watermark_embed_jain_mod(view, tree, 0.25, 'yes')
+watermark_embed_jain_mod(view, tree, 0.5, 'yes')
+watermark_embed_jain_mod(view, tree, 0.75, 'yes')
+watermark_embed_jain_mod(view, tree, 1, 'yes')
+
+watermark_extract_jain_mod(view, tree, 0.05, 'yes')
+watermark_extract_jain_mod(view, tree, 0.25, 'yes')
+watermark_extract_jain_mod(view, tree, 0.5, 'yes')
+watermark_extract_jain_mod(view, tree, 0.75, 'yes')
+watermark_extract_jain_mod(view, tree, 1, 'yes')
