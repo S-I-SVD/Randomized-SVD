@@ -520,6 +520,278 @@ def lowrank_extractionerror_plot_jain_mod(img,watermark):
     plt.legend()
     plt.savefig('../out/watermarking/plots/lowrankcompression/jainmod/lowrank_extractionerror_jain_mod.png')
     
+def crop_left(img, number):
+    img = img[:,number:,:]
+    return img
+
+def crop_right(img, number):
+    img = img[:,:-number,:]
+    return img
+
+def crop_bottom(img, number):
+    img = img[:-number,:,:]
+    return img
+
+def crop_top(img, number):
+    img = img[number:,:,:]
+    return img
+
+def crop_image_liutan(img, watermark, scale, number, side):
+    
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_image = crop_left(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/liutan/embedding_alpha_{}_cropped_{}_from_left.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'right':
+        cropped_image = crop_right(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/liutan/embedding_alpha_{}_cropped_{}_from_right.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'bottom':
+        cropped_image = crop_bottom(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/liutan/embedding_alpha_{}_cropped_{}_from_bottom.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'top':
+        cropped_image = crop_top(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/liutan/embedding_alpha_{}_cropped_{}_from_top.png'.format(scale, number), cropped_watermarked_image_padded)
+        
+def crop_extract_watermark_liutan(img, watermark, scale, number, side):
+    
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_image = crop_left(img_watermarked, number)
+    elif side == 'right':
+        cropped_image = crop_right(img_watermarked, number)
+    elif side == 'bottom':
+        cropped_image = crop_bottom(img_watermarked, number)
+    elif side == 'top':
+        cropped_image = crop_top(img_watermarked, number)
+        
+    cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+    cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+    cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+    cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+    cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        
+    watermark_extracted = it.extract_watermark(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
+            scale=scale)
+    watermark_extracted_final = reversepad(watermark_extracted, watermark)
+    watermark_extracted_final = watermark_extracted_final.astype(np.int32)
+    plt.imshow(watermark_extracted_final)
+    plt.show()
+    matplotlib.image.imsave('../out/watermarking/cropping/extracting/liutan/extrated_watermark_alpha_{}_cropped_{}_from_top.png'.format(scale, number), watermark_extracted_final)
+
+def crop_image_jain(img, watermark, scale, number, side):
+    
+    img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_image = crop_left(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/jain/embedding_alpha_{}_cropped_{}_from_left.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'right':
+        cropped_image = crop_right(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/jain/embedding_alpha_{}_cropped_{}_from_right.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'bottom':
+        cropped_image = crop_bottom(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/jain/embedding_alpha_{}_cropped_{}_from_bottom.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'top':
+        cropped_image = crop_top(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/jain/embedding_alpha_{}_cropped_{}_from_top.png'.format(scale, number), cropped_watermarked_image_padded)
+ 
+def crop_extract_watermark_jain(img, watermark, scale, number, side):
+    img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_image = crop_left(img_watermarked, number)
+    elif side == 'right':
+        cropped_image = crop_right(img_watermarked, number)
+    elif side == 'bottom':
+        cropped_image = crop_bottom(img_watermarked, number)
+    elif side == 'top':
+        cropped_image = crop_top(img_watermarked, number)
+        
+    cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+    cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+    cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+    cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+    cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        
+    watermark_extracted = it.extract_watermark_jain(cropped_watermarked_image_padded, img, watermark_vh, scale)
+    watermark_extracted_final = reversepad(watermark_extracted, watermark)
+    watermark_extracted_final = watermark_extracted_final.astype(np.int32)
+    plt.imshow(watermark_extracted_final)
+    plt.show()
+    matplotlib.image.imsave('../out/watermarking/cropping/extracting/jain/extrated_watermark_alpha_{}_cropped_{}_from_top.png'.format(scale, number), watermark_extracted_final)
+
+def crop_image_jain_mod(img, watermark, scale, number, side):
+    
+    img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_image = crop_left(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/jainmod/embedding_alpha_{}_cropped_{}_from_left.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'right':
+        cropped_image = crop_right(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/jainmod/embedding_alpha_{}_cropped_{}_from_right.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'bottom':
+        cropped_image = crop_bottom(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/jainmod/embedding_alpha_{}_cropped_{}_from_bottom.png'.format(scale, number), cropped_watermarked_image_padded)
+    elif side == 'top':
+        cropped_image = crop_top(img_watermarked, number)
+        cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+        cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+        cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+        cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+        cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+        matplotlib.image.imsave('../out/watermarking/cropping/embedding/jainmod/embedding_alpha_{}_cropped_{}_from_top.png'.format(scale, number), cropped_watermarked_image_padded)
+
+ 
+def crop_extract_watermark_jain_mod(img, watermark, scale, number, side):
+    img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_image = crop_left(img_watermarked, number)
+    elif side == 'right':
+        cropped_image = crop_right(img_watermarked, number)
+    elif side == 'bottom':
+        cropped_image = crop_bottom(img_watermarked, number)
+    elif side == 'top':
+        cropped_image = crop_top(img_watermarked, number)
+        
+    cropped_image_rows, cropped_image_columns = cropped_image.shape[:2] 
+    cropped_image_stacked = cropped_image.reshape(img_rows, -1)
+    cropped_watermarked_image_stacked_padded = it.padimage(img_stacked, cropped_image_stacked)
+    cropped_watermarked_image_padded = cropped_watermarked_image_stacked_padded.reshape(img_rows,img_columns,-1)
+    cropped_watermarked_image_padded = cropped_watermarked_image_padded.astype(np.int32)
+    plt.imshow(cropped_watermarked_image_padded)
+    plt.show()
+    watermark_extracted = it.extract_watermark_jain_mod(cropped_watermarked_image_padded, img, watermark_vh, scale)
+    watermark_extracted_final = reversepad(watermark_extracted, watermark)
+    watermark_extracted_final = watermark_extracted_final.astype(np.int32)
+    plt.imshow(watermark_extracted_final)
+    plt.show()
+    matplotlib.image.imsave('../out/watermarking/cropping/extracting/jainmod/extrated_watermark_alpha_{}_cropped_{}_from_top.png'.format(scale, number), watermark_extracted_final)
+
+
 ##lowrank_extractionerror_plot_liutan(view,tree)
 ##lowrank_extractionerror_plot_jain(view,tree)
 #lowrank_extractionerror_plot_jain_mod(view,tree)
+crop_extract_watermark_liutan(view, tree, 0.01, 20, 'bottom')
+crop_extract_watermark_liutan(view, tree, 0.01, 20, 'right')
+crop_image_liutan(view, tree, 0.01, 20, 'bottom')
+crop_image_liutan(view, tree, 0.01, 20, 'right')
+crop_extract_watermark_jain(view, tree, 0.01, 20, 'bottom')
+crop_extract_watermark_jain(view, tree, 0.01, 20, 'right')
+crop_image_jain(view, tree, 0.01, 20, 'bottom')
+crop_image_jain(view, tree, 0.01, 20, 'right')
+crop_extract_watermark_jain_mod(view, tree, 0.01, 20, 'bottom')
+crop_extract_watermark_jain_mod(view, tree, 0.01, 20, 'right')
+crop_image_jain_mod(view, tree, 0.01, 20, 'bottom')
+crop_image_jain_mod(view, tree, 0.01, 20, 'right')
+#
+#crop_extract_watermark_jain(view, tree, 0.01, 20, 'left')
+#crop_extract_watermark_jain(view, tree, 0.01, 20, 'top')
+#crop_extract_watermark_jain(view, tree, 0.01, 40, 'bottom')
+#crop_extract_watermark_jain(view, tree, 0.01, 40, 'left')
+#crop_extract_watermark_jain(view, tree, 0.01, 40, 'right')
+#crop_extract_watermark_jain(view, tree, 0.01, 40, 'top')
+#crop_extract_watermark_jain(view, tree, 0.01, 60, 'bottom')
+#crop_extract_watermark_jain(view, tree, 0.01, 60, 'left')
+#crop_extract_watermark_jain(view, tree, 0.01, 60, 'right')
+#crop_extract_watermark_jain(view, tree, 0.01, 60, 'top')
+#crop_extract_watermark_jain(view, tree, 0.01, 20, 'bottom')
+#crop_extract_watermark_jain(view, tree, 0.01, 20, 'right')
+#crop_extract_watermark_jain(view, tree, 0.01, 20, 'left')
+#crop_extract_watermark_jain(view, tree, 0.01, 20, 'top')
+#crop_extract_watermark_jain(view, tree, 0.01, 40, 'bottom')
+#crop_extract_watermark_jain(view, tree, 0.01, 40, 'left')
+#crop_extract_watermark_jain(view, tree, 0.01, 40, 'right')
+#crop_extract_watermark_jain(view, tree, 0.01, 40, 'top')
+#crop_extract_watermark_jain(view, tree, 0.01, 60, 'bottom')
+#crop_extract_watermark_jain(view, tree, 0.01, 60, 'left')
+#crop_extract_watermark_jain(view, tree, 0.01, 60, 'right')
+#crop_extract_watermark_jain(view, tree, 0.01, 60, 'top')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 20, 'bottom')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 20, 'right')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 20, 'left')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 20, 'top')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 40, 'bottom')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 40, 'left')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 40, 'right')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 40, 'top')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 60, 'bottom')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 60, 'left')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 60, 'right')
+#crop_extract_watermark_jain_mod(view, tree, 0.01, 60, 'top')
