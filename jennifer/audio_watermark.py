@@ -157,3 +157,15 @@ mat4 = mat4[:,:5928]
 M = watermark_extract(mat4, Uw, S, Vw, 0.4)
 ts,new_marked = sig.istft(M)
 write("news_e_nonoise.mp3",W_sr, new_marked)
+
+# jain mod diff scales
+marked1, vh = embed_watermark_jain_mod(mat,W_mat,0.1)
+ts,new1 = sig.istft(marked1)
+write("bach_jainm_0.4.mp3",sr,new1)
+
+#jain mod robustness
+sr, x_1 = read('bach_1sem.mp3')
+f,t,mat_1 = sig.stft(x_1[:,0])
+M_1 = extract_watermark_jain_mod(mat_1[:,0:5928], mat, vh, 0.1)
+ts,new_1 = sig.istft(M_1)
+write("newsm_1sem.mp3",W_sr,new_1)
