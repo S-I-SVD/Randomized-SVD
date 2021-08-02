@@ -12,9 +12,13 @@ The below information should help clarify how to reproduce specific results, whi
 
 ## Data
 Our project utilizes the following sources of data.
+
+## David
 	
 ## Jennifer
 
+Jennifer's code contains all functions needed to reproduce our watermarking and media processing work on audio files. 
 
 ## Katie
 
+/Watermarking/image_tools_copy.py, /Watermarking/svd_tools_copy.py, and /Watermarking/watermark_copy.py are nearly exact copies of three files in David's code with minor changes, and were moved to this folder in order to make edits easier. 
