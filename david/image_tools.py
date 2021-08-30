@@ -21,10 +21,16 @@ def compress_image(img, ratio=None, rank=None, min_energy=None, mode='determinis
         mode=mode, power_iterations=power_iterations)), img)
 
 
-'''
-Embed a watermark in an image using the Liu & Tan algorithm
-'''
 def embed_watermark(img, watermark, scale=1):
+    '''
+    Embed a watermark in a multi-channel image using the Liu & Tan watermarking scheme.
+    Corresponds to Algorithm 2.2 in the paper.
+    Args:
+        img: The image in which to embed the watemark (A in Algorithm 2.2)
+        watermark: The watermark to embed in the image (W in Algorithm 2.2)
+        scale: Scaling factor (alpha in Algorithm 2.2)
+    Returns: (A_W, U_W, S, (V_W)^T) (corresponding to the symbols in Algorithm 2.2)
+    '''
     img_type = img.dtype
     img = img.astype(np.float64)
     watermark = watermark.astype(np.float64)

@@ -14,6 +14,8 @@ The below information should help clarify how to reproduce specific results, whi
 Our project utilizes the following sources of data.
 
 ## David
+- `watermark.py`: Contains watermark embedding and watermark extraction functions using the Liu & Tan, Jain, proposed Modified Jain watermarking schemes, which can be applied to matrices.
+- `image_tools.py`: Contains the same watermark-related functions as in `watermark.py`, but usable on color images. Each function "stacks" the *M x N x C* images into 2-dimensional matrices, applies the watermarking function, and then "unstacks" the result back into an *M x N x C* image.
 	
 ## Jennifer
 
