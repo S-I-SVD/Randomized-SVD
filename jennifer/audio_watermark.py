@@ -90,9 +90,15 @@ def specgraph(data,text):
     FS, data = wavfile.read(wname)  # read wav file
     if mp3_audio.channels==2:
         plt.specgram(data[:,0], Fs=FS, NFFT=128, noverlap=0)  # plot
+        plt.xlabel('Time (s)')
+        plt.ylabel('Frequency')
+        plt.rc('axes', labelsize=16)
         plt.title(text) # label
     else:
         plt.specgram(data, Fs=FS, NFFT=128, noverlap=0)  # plot
+        plt.xlabel('Time (s)')
+        plt.ylabel('Frequency')
+        plt.rc('axes', labelsize=16)
         plt.title(text) # label
     plt.show()
     
@@ -107,6 +113,7 @@ def ampgraph(data,text):
     plt.plot(np.arange(num_samples) / sample_rate, snd_mono)
     plt.xlabel('Time (s)')
     plt.ylabel('Amplitude')
+    plt.rc('axes', labelsize=16)
     plt.title(text)
     plt.show()
 
