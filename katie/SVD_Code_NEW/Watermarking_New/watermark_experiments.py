@@ -365,7 +365,7 @@ def lowrank_error_jain_mod(img, watermark, scale, rank):
     return error
 
 def lowrank_extractionerror_plot_liutan(img,watermark):
-    alphas = (0.05,0.1,0.15,0.2,0.25,0.5,0.75)
+    alphas = (0.05,0.1,0.5,0.75)
     ranks = np.arange(1,300)
     errors0 = []
     for rank in ranks:
@@ -387,28 +387,10 @@ def lowrank_extractionerror_plot_liutan(img,watermark):
         error3 = lowrank_error_liutan(img,watermark,alphas[3],rank)
         errors3.append(error3)
         print("liutan",rank)
-    errors4 = []
-    for rank in ranks:
-        error4 = lowrank_error_liutan(img,watermark,alphas[4],rank)
-        errors4.append(error4)
-        print("liutan",rank)
-    errors5 = []
-    for rank in ranks:
-        error5 = lowrank_error_liutan(img,watermark,alphas[5],rank)
-        errors5.append(error5)
-        print("liutan",rank)
-    errors6 = []
-    for rank in ranks:
-        error6 = lowrank_error_liutan(img,watermark,alphas[6],rank)
-        errors6.append(error6)
-        print("liutan",rank)
     plt.plot(errors0,label="a = {0}".format(alphas[0]))
     plt.plot(errors1,label="a = {0}".format(alphas[1]))
     plt.plot(errors2,label="a = {0}".format(alphas[2]))
     plt.plot(errors3,label="a = {0}".format(alphas[3]))
-    plt.plot(errors4,label="a = {0}".format(alphas[4]))
-    plt.plot(errors5,label="a = {0}".format(alphas[5]))
-    plt.plot(errors6,label="a = {0}".format(alphas[6]))
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
@@ -416,7 +398,7 @@ def lowrank_extractionerror_plot_liutan(img,watermark):
 
 
 def lowrank_extractionerror_plot_jain(img,watermark):
-    alphas = (0.05,0.1,0.15,0.2,0.25,0.5,0.75)
+    alphas = (0.05,0.1,0.5,0.75)
     ranks = np.arange(1,300)
     errors0 = []
     for rank in ranks:
@@ -438,35 +420,17 @@ def lowrank_extractionerror_plot_jain(img,watermark):
         error3 = lowrank_error_jain(img,watermark,alphas[3],rank)
         errors3.append(error3)
         print("jain",rank)
-    errors4 = []
-    for rank in ranks:
-        error4 = lowrank_error_jain(img,watermark,alphas[4],rank)
-        errors4.append(error4)
-        print("jain",rank)
-    errors5 = []
-    for rank in ranks:
-        error5 = lowrank_error_jain(img,watermark,alphas[5],rank)
-        errors5.append(error5)
-        print("jain",rank)
-    errors6 = []
-    for rank in ranks:
-        error6 = lowrank_error_jain(img,watermark,alphas[6],rank)
-        errors6.append(error6)
-        print("jain",rank)
     plt.plot(errors0,label="a = {0}".format(alphas[0]))
     plt.plot(errors1,label="a = {0}".format(alphas[1]))
     plt.plot(errors2,label="a = {0}".format(alphas[2]))
     plt.plot(errors3,label="a = {0}".format(alphas[3]))
-    plt.plot(errors4,label="a = {0}".format(alphas[4]))
-    plt.plot(errors5,label="a = {0}".format(alphas[5]))
-    plt.plot(errors6,label="a = {0}".format(alphas[6]))
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
     plt.savefig('../out/watermarking/plots/lowrankcompression/jain/lowrank_extractionerror_jain.eps',bbox_inches='tight')
     
 def lowrank_extractionerror_plot_jain_mod(img,watermark):
-    alphas = (0.05,0.1,0.15,0.2,0.25,0.5,0.75)
+    alphas = (0.05,0.1,0.25,0.5,0.75)
     ranks = np.arange(1,300)
     errors0 = []
     for rank in ranks:
@@ -488,27 +452,10 @@ def lowrank_extractionerror_plot_jain_mod(img,watermark):
         error3 = lowrank_error_jain_mod(img,watermark,alphas[3],rank)
         errors3.append(error3)
         print("jain mod",rank)
-    errors4 = []
-    for rank in ranks:
-        error4 = lowrank_error_jain_mod(img,watermark,alphas[4],rank)
-        errors4.append(error4)
-        print("jain mod",rank)
-    errors5 = []
-    for rank in ranks:
-        error5 = lowrank_error_jain_mod(img,watermark,alphas[5],rank)
-        errors5.append(error5)
-        print("jain mod",rank)
-    errors6 = []
-    for rank in ranks:
-        error6 = lowrank_error_jain_mod(img,watermark,alphas[6],rank)
-        errors6.append(error6)
     plt.plot(errors0,label="a = {0}".format(alphas[0]))
     plt.plot(errors1,label="a = {0}".format(alphas[1]))
     plt.plot(errors2,label="a = {0}".format(alphas[2]))
     plt.plot(errors3,label="a = {0}".format(alphas[3]))
-    plt.plot(errors4,label="a = {0}".format(alphas[4]))
-    plt.plot(errors5,label="a = {0}".format(alphas[5]))
-    plt.plot(errors6,label="a = {0}".format(alphas[6]))
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
