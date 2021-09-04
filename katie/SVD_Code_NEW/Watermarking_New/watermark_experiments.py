@@ -6,7 +6,7 @@ import imageio
 from timeit import timeit
 from mpl_toolkits import mplot3d
 from PIL import Image
-import png
+#import png
 import svd_tools_copy as svdt
 import image_tools_copy as it
 
@@ -18,6 +18,8 @@ import image_tools_copy as it
 
 view = it.load_image('../res/view.jpg')
 tree = it.load_image('../res/tree.jpg')
+
+plt.rcParams['font.size'] = '18'
 
 
 def sv_plot_save(img, fname): #plotting the singular values, can only be used on a stacked matrix
@@ -54,7 +56,7 @@ def watermark_embed_liutan(img, watermark, scale, save):
     if save=='no':
         return img_watermarked
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/watermarked_image/liutan/watermarked_image_alpha_{}.png'.format(scale), img_watermarked)
+        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/liutan/watermarked_image_alpha_{}.png'.format(scale))
         #Image.fromarray(img_watermarked,'RGB').save('../out/watermarking/watermarked_image/liutan/watermarked_image_alpha_{}.png'.format(scale), 'PNG')
     
 def watermark_extract_liutan(img, watermark, scale, save):
@@ -67,7 +69,7 @@ def watermark_extract_liutan(img, watermark, scale, save):
     if save=='no':
         return watermark_extracted_final
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/extracted_watermark/liutan/extracted_watermark_alpha_{}.png'.format(scale), watermark_extracted_final)
+        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/liutan/extracted_watermark_alpha_{}.png'.format(scale))
     
 def watermark_embed_jain(img, watermark, scale, save):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jain
@@ -76,7 +78,7 @@ def watermark_embed_jain(img, watermark, scale, save):
     if save=='no':
         return img_watermarked
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/watermarked_image/jain/watermarked_image_alpha_{}.png'.format(scale), img_watermarked)
+        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/jain/watermarked_image_alpha_{}.png'.format(scale))
     
 def watermark_extract_jain(img, watermark, scale, save):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jain
@@ -87,7 +89,7 @@ def watermark_extract_jain(img, watermark, scale, save):
     if save=='no':
         return watermark_extracted_final
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/extracted_watermark/jain/extracted_watermark_alpha_{}.png'.format(scale), watermark_extracted_final)
+        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/jain/extracted_watermark_alpha_{}.png'.format(scale))
     
 def watermark_embed_jain_mod(img, watermark, scale, save):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jainmod
@@ -96,7 +98,7 @@ def watermark_embed_jain_mod(img, watermark, scale, save):
     if save=='no':
         return img_watermarked
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/watermarked_image/jainmod/watermarked_image_alpha_{}.png'.format(scale), img_watermarked)
+        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/jainmod/watermarked_image_alpha_{}.png'.format(scale))
     
 def watermark_extract_jain_mod(img, watermark, scale, save):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jainmod
@@ -107,7 +109,7 @@ def watermark_extract_jain_mod(img, watermark, scale, save):
     if save=='no':
         return watermark_extracted_final
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/extracted_watermark/jainmod/extracted_watermark_alpha_{}.png'.format(scale), watermark_extracted_final)
+        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/jainmod/extracted_watermark_alpha_{}.png'.format(scale))
         
 def perceptibility_liutan(img, watermark, scale):
     #watermarked image
@@ -223,7 +225,7 @@ def lowrank_image_liutan(img, watermark, scale, rank, save):
     if save=='no':
         return watermark_extracted
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/robustness/lowrankextraction/liutan/extraction_rank_{}_alpha_{}.png'.format(rank,scale), watermark_extracted)
+        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/liutan/extraction_rank_{}_alpha_{}.png'.format(rank,scale))
         
 
 def lowrank_watermarked_image_liutan(img, watermark, scale, rank, save):
@@ -238,7 +240,7 @@ def lowrank_watermarked_image_liutan(img, watermark, scale, rank, save):
     if save=='no':
         return img_watermarked_approx
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/robustness/lowrankembedding/liutan/embedding_rank_{}_alpha_{}.png'.format(rank,scale), img_watermarked_approx)
+        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/liutan/embedding_rank_{}_alpha_{}.png'.format(rank,scale))
     
 def lowrank_image_jain(img, watermark, scale, rank, save):
     #watermarked image
@@ -256,7 +258,7 @@ def lowrank_image_jain(img, watermark, scale, rank, save):
     if save=='no':
         return watermark_extracted
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/robustness/lowrankextraction/jain/extraction_rank_{}_alpha_{}.png'.format(rank,scale), watermark_extracted)
+        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/jain/extraction_rank_{}_alpha_{}.png'.format(rank,scale))
     
     
 def lowrank_watermarked_image_jain(img, watermark, scale, rank, save):
@@ -270,7 +272,7 @@ def lowrank_watermarked_image_jain(img, watermark, scale, rank, save):
     if save=='no':
         return img_watermarked_approx
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/robustness/lowrankembedding/jain/embedding_rank_{}_alpha_{}.png'.format(rank,scale), img_watermarked_approx)
+        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/jain/embedding_rank_{}_alpha_{}.png'.format(rank,scale))
     
     
 def lowrank_image_jain_mod(img, watermark, scale, rank,save):
@@ -286,7 +288,7 @@ def lowrank_image_jain_mod(img, watermark, scale, rank,save):
     if save=='no':
         return watermark_extracted
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/robustness/lowrankextraction/jainmod/extraction_rank_{}_alpha_{}.png'.format(rank,scale), watermark_extracted)
+        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/jainmod/extraction_rank_{}_alpha_{}.png'.format(rank,scale))
     
 def lowrank_watermarked_image_jain_mod(img, watermark, scale, rank,save):
     #watermarked image
@@ -298,7 +300,7 @@ def lowrank_watermarked_image_jain_mod(img, watermark, scale, rank,save):
     if save=='no':
         return img_watermarked_approx
     elif save=='yes':
-        matplotlib.image.imsave('../out/watermarking/robustness/lowrankembedding/jainmod/embedding_rank_{}_alpha_{}.png'.format(rank,scale), img_watermarked_approx)
+        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/jainmod/embedding_rank_{}_alpha_{}.png'.format(rank,scale))
     
     
 def lowrank_error_liutan(img, watermark, scale, rank):
@@ -410,7 +412,7 @@ def lowrank_extractionerror_plot_liutan(img,watermark):
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/lowrankcompression/liutan/lowrank_extractionerror_liutan.png')
+    plt.savefig('../out/watermarking/plots/lowrankcompression/liutan/lowrank_extractionerror_liutan.eps')
 
 
 def lowrank_extractionerror_plot_jain(img,watermark):
@@ -461,7 +463,7 @@ def lowrank_extractionerror_plot_jain(img,watermark):
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/lowrankcompression/jain/lowrank_extractionerror_jain.png')
+    plt.savefig('../out/watermarking/plots/lowrankcompression/jain/lowrank_extractionerror_jain.eps')
     
 def lowrank_extractionerror_plot_jain_mod(img,watermark):
     alphas = (0.05,0.1,0.15,0.2,0.25,0.5,0.75)
@@ -510,7 +512,7 @@ def lowrank_extractionerror_plot_jain_mod(img,watermark):
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/lowrankcompression/jainmod/lowrank_extractionerror_jain_mod.png')
+    plt.savefig('../out/watermarking/plots/lowrankcompression/jainmod/lowrank_extractionerror_jain_mod.eps')
     
     
     
@@ -564,7 +566,7 @@ def crop_image_liutan(img, watermark, scale, number, side):
         cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
         
-    matplotlib.image.imsave('../out/watermarking/cropping/embedding/liutan/embedding_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side), cropped_watermarked_image_padded)
+    it.save_image(cropped_watermarked_image_padded,'../out/watermarking/cropping/embedding/liutan/embedding_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
         
 def crop_extract_watermark_liutan(img, watermark, scale, number, side):
     
@@ -588,7 +590,7 @@ def crop_extract_watermark_liutan(img, watermark, scale, number, side):
             scale=scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
     watermark_extracted_final = watermark_extracted_final.astype(np.int32)
-    matplotlib.image.imsave('../out/watermarking/cropping/extracting/liutan/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side), watermark_extracted_final)
+    it.save_image(watermark_extracted_final,'../out/watermarking/cropping/extracting/liutan/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
 
 def crop_image_jain(img, watermark, scale, number, side):
     
@@ -614,7 +616,7 @@ def crop_image_jain(img, watermark, scale, number, side):
         cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
         
-    matplotlib.image.imsave('../out/watermarking/cropping/embedding/jain/embedding_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side), cropped_watermarked_image_padded)
+    it.save_image(cropped_watermarked_image_padded,'../out/watermarking/cropping/embedding/jain/embedding_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
  
 def crop_extract_watermark_jain(img, watermark, scale, number, side):
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
@@ -636,7 +638,7 @@ def crop_extract_watermark_jain(img, watermark, scale, number, side):
     watermark_extracted = it.extract_watermark_jain(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
     watermark_extracted_final = watermark_extracted_final.astype(np.int32)
-    matplotlib.image.imsave('../out/watermarking/cropping/extracting/jain/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side), watermark_extracted_final)
+    it.save_image(watermark_extracted_final,'../out/watermarking/cropping/extracting/jain/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
 
 def crop_image_jain_mod(img, watermark, scale, number, side):
     
@@ -662,7 +664,7 @@ def crop_image_jain_mod(img, watermark, scale, number, side):
         cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
         
-    matplotlib.image.imsave('../out/watermarking/cropping/embedding/jainmod/embedding_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side), cropped_watermarked_image_padded)
+    it.save_image(cropped_watermarked_image_padded,'../out/watermarking/cropping/embedding/jainmod/embedding_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
 
  
 def crop_extract_watermark_jain_mod(img, watermark, scale, number, side):
@@ -685,5 +687,5 @@ def crop_extract_watermark_jain_mod(img, watermark, scale, number, side):
     watermark_extracted = it.extract_watermark_jain_mod(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
     watermark_extracted_final = watermark_extracted_final.astype(np.int32)
-    matplotlib.image.imsave('../out/watermarking/cropping/extracting/jainmod/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side), watermark_extracted_final)
+    it.save_image( watermark_extracted_final,'../out/watermarking/cropping/extracting/jainmod/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
 
