@@ -6,7 +6,7 @@ import imageio
 from timeit import timeit
 from mpl_toolkits import mplot3d
 from PIL import Image
-import png
+#import png
 import svd_tools_copy as svdt
 import image_tools_copy as it
 
