@@ -23,4 +23,6 @@ Jennifer's code contains all functions needed to reproduce our watermarking and 
 
 ## Katie
 
-/Watermarking/image_tools_copy.py, /Watermarking/svd_tools_copy.py, and /Watermarking/watermark_copy.py are nearly exact copies of three files in David's code with minor changes, and were moved to this folder in order to make edits easier. 
+/Watermarking_new/image_tools_copy.py, /Watermarking_new/svd_tools_copy.py, and /Watermarking_new/watermark_copy.py are nearly exact copies of three files in David's code with minor changes, and were moved to this folder in order to make edits easier.
+
+The following notebook illustrates how to use the code in /Watermarking_new/watermarking_experiments.py: https://colab.research.google.com/drive/1a4zlPgRrjzMdJ4XjOKJdVf0R0k19V_8d?usp=sharing 
