@@ -412,7 +412,7 @@ def lowrank_extractionerror_plot_liutan(img,watermark):
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/lowrankcompression/liutan/lowrank_extractionerror_liutan.png')
+    plt.savefig('../out/watermarking/plots/lowrankcompression/liutan/lowrank_extractionerror_liutan.eps')
 
 
 def lowrank_extractionerror_plot_jain(img,watermark):
@@ -463,7 +463,7 @@ def lowrank_extractionerror_plot_jain(img,watermark):
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/lowrankcompression/jain/lowrank_extractionerror_jain.png')
+    plt.savefig('../out/watermarking/plots/lowrankcompression/jain/lowrank_extractionerror_jain.eps')
     
 def lowrank_extractionerror_plot_jain_mod(img,watermark):
     alphas = (0.05,0.1,0.15,0.2,0.25,0.5,0.75)
@@ -512,7 +512,7 @@ def lowrank_extractionerror_plot_jain_mod(img,watermark):
     plt.xlabel('Rank')
     plt.ylabel('Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/lowrankcompression/jainmod/lowrank_extractionerror_jain_mod.png')
+    plt.savefig('../out/watermarking/plots/lowrankcompression/jainmod/lowrank_extractionerror_jain_mod.eps')
     
     
     
