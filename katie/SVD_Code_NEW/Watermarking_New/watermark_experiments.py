@@ -19,6 +19,8 @@ import image_tools_copy as it
 view = it.load_image('../res/view.jpg')
 tree = it.load_image('../res/tree.jpg')
 
+plt.rcParams['font.size'] = '18'
+
 
 def sv_plot_save(img, fname): #plotting the singular values, can only be used on a stacked matrix
     #formatting
