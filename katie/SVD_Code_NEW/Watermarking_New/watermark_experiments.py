@@ -283,8 +283,8 @@ def lowrank_image_jain_mod(img, watermark, scale, rank,save):
     img_watermarked_approx = it.lowrankapprox(img_watermarked,rank)
     #extracting watermark using original extraction key and compressed watermarked image
     watermark_extracted = it.extract_watermark_jain_mod(img_watermarked, img, watermark_vh, scale=scale)
-    watermark_extracted = watermark_extracted.astype(np.int32)
     watermark_extracted = reversepad(watermark_extracted, watermark)
+    watermark_extracted = watermark_extracted.astype(np.int32)
     if save=='no':
         return watermark_extracted
     elif save=='yes':
