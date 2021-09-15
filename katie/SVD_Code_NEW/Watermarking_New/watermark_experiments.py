@@ -537,7 +537,7 @@ def crop_extract_watermark_liutan(img, watermark, scale, number, side):
             scale=scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
     watermark_extracted_final = watermark_extracted_final.astype(np.int32)
-    it.save_image(watermark_extracted_final,'../out/watermarking/cropping/extracting/liutan/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
+    it.save_image(watermark_extracted_final,'../out/watermarking/cropping/extracting/liutan/extracted_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
 
 def crop_image_jain(img, watermark, scale, number, side):
     
@@ -585,7 +585,7 @@ def crop_extract_watermark_jain(img, watermark, scale, number, side):
     watermark_extracted = it.extract_watermark_jain(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
     watermark_extracted_final = watermark_extracted_final.astype(np.int32)
-    it.save_image(watermark_extracted_final,'../out/watermarking/cropping/extracting/jain/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
+    it.save_image(watermark_extracted_final,'../out/watermarking/cropping/extracting/jain/extracted_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
 
 def crop_image_jain_mod(img, watermark, scale, number, side):
     
@@ -634,5 +634,5 @@ def crop_extract_watermark_jain_mod(img, watermark, scale, number, side):
     watermark_extracted = it.extract_watermark_jain_mod(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
     watermark_extracted_final = watermark_extracted_final.astype(np.int32)
-    it.save_image( watermark_extracted_final,'../out/watermarking/cropping/extracting/jainmod/extrated_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
+    it.save_image( watermark_extracted_final,'../out/watermarking/cropping/extracting/jainmod/extracted_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
 
