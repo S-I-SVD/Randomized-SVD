@@ -12,7 +12,8 @@ import matplotlib.pyplot as plt
 
 from timeit import timeit
 
-
+#for log
+import math
 
 '''
 Computes the randomized singular value decomposition of the input matrix.
@@ -303,6 +304,73 @@ def modify_sigmas_add(img, scalar):
     length_S = len(S)
     for i in range(length_S):
         S[i] = S[i]  + scalar
+    S = np.diag(S)
+    
+    reconstruction = U @ S @ VT
+    reconstruction = reconstruction.reshape(img_rows,img_columns,-1)
+    
+    return reconstruction
+
+
+def modify_sigmas_exponent(img, scalar):
+    img_type = img.dtype
+    img = img.astype(np.float64)
+
+        
+    # Stack color channels
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    
+    U, S, VT = la.svd(img_stacked, full_matrices=False)
+
+    length_S = len(S)
+    for i in range(length_S):
+        S[i] = S[i]**scalar
+    S = np.diag(S)
+    
+    reconstruction = U @ S @ VT
+    reconstruction = reconstruction.reshape(img_rows,img_columns,-1)
+    
+    return reconstruction
+
+
+def modify_sigmas_multiply(img, scalar):
+    #note: this is the same as multiplying the entire image by the scalar
+    img_type = img.dtype
+    img = img.astype(np.float64)
+
+        
+    # Stack color channels
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    
+    U, S, VT = la.svd(img_stacked, full_matrices=False)
+
+    length_S = len(S)
+    for i in range(length_S):
+        S[i] = S[i]*scalar
+    S = np.diag(S)
+    
+    reconstruction = U @ S @ VT
+    reconstruction = reconstruction.reshape(img_rows,img_columns,-1)
+    
+    return reconstruction
+
+
+def modify_sigmas_log(img, scalar):
+    img_type = img.dtype
+    img = img.astype(np.float64)
+
+        
+    # Stack color channels
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    
+    U, S, VT = la.svd(img_stacked, full_matrices=False)
+
+    length_S = len(S)
+    for i in range(length_S):
+        S[i] = (math.log10(S[i]+1))**scalar
     S = np.diag(S)
     
     reconstruction = U @ S @ VT
