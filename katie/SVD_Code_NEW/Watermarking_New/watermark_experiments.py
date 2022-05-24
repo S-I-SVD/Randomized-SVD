@@ -636,3 +636,101 @@ def crop_extract_watermark_jain_mod(img, watermark, scale, number, side):
     watermark_extracted_final = watermark_extracted_final.astype(np.int32)
     it.save_image( watermark_extracted_final,'../out/watermarking/cropping/extracting/jainmod/extracted_watermark_alpha_{}_cropped_{}_from_{}.png'.format(scale, number,side))
 
+
+
+def crop_error_liutan(img, watermark, scale, number, side):
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_watermarked_image = crop_left(img_watermarked, number)
+    elif side == 'right':
+        cropped_watermarked_image = crop_right(img_watermarked, number)
+    elif side == 'bottom':
+        cropped_watermarked_image = crop_bottom(img_watermarked, number)
+    elif side == 'top':
+        cropped_watermarked_image = crop_top(img_watermarked, number)
+        
+    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
+    cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
+    watermark_extracted = it.extract_watermark(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
+            scale=scale)
+    watermark_extracted = reversepad(watermark_extracted, watermark)
+    #stacking extracted watermark
+    watermark_extracted = watermark_extracted.astype(np.float64)
+    watermark_extracted_rows, watermark_extracted_columns = watermark_extracted.shape[:2] 
+    watermark_extracted_stacked = watermark_extracted.reshape(watermark_extracted_rows, -1)
+    #stacking original watermark
+    watermark = watermark.astype(np.float64)
+    watermark_rows, watermark_columns = watermark.shape[:2] 
+    watermark_stacked = watermark.reshape(watermark_rows, -1)
+    #norm difference
+    error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
+    return error
+
+
+def crop_error_jain(img, watermark, scale, number, side):
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark_jain(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_watermarked_image = crop_left(img_watermarked, number)
+    elif side == 'right':
+        cropped_watermarked_image = crop_right(img_watermarked, number)
+    elif side == 'bottom':
+        cropped_watermarked_image = crop_bottom(img_watermarked, number)
+    elif side == 'top':
+        cropped_watermarked_image = crop_top(img_watermarked, number)
+        
+    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
+    cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
+    watermark_extracted = it.extract_watermark_jain(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
+            scale=scale)
+    watermark_extracted = reversepad(watermark_extracted, watermark)
+    #stacking extracted watermark
+    watermark_extracted = watermark_extracted.astype(np.float64)
+    watermark_extracted_rows, watermark_extracted_columns = watermark_extracted.shape[:2] 
+    watermark_extracted_stacked = watermark_extracted.reshape(watermark_extracted_rows, -1)
+    #stacking original watermark
+    watermark = watermark.astype(np.float64)
+    watermark_rows, watermark_columns = watermark.shape[:2] 
+    watermark_stacked = watermark.reshape(watermark_rows, -1)
+    #norm difference
+    error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
+    return error
+
+def crop_error_jain(img, watermark, scale, number, side):
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
+    img_watermarked = img_watermarked.astype(np.int32)
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    #img_stacked = img_stacked.astype(np.int32)
+    if side == 'left':
+        cropped_watermarked_image = crop_left(img_watermarked, number)
+    elif side == 'right':
+        cropped_watermarked_image = crop_right(img_watermarked, number)
+    elif side == 'bottom':
+        cropped_watermarked_image = crop_bottom(img_watermarked, number)
+    elif side == 'top':
+        cropped_watermarked_image = crop_top(img_watermarked, number)
+        
+    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
+    cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
+    watermark_extracted = it.extract_watermark_jain_mod(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
+            scale=scale)
+    watermark_extracted = reversepad(watermark_extracted, watermark)
+    #stacking extracted watermark
+    watermark_extracted = watermark_extracted.astype(np.float64)
+    watermark_extracted_rows, watermark_extracted_columns = watermark_extracted.shape[:2] 
+    watermark_extracted_stacked = watermark_extracted.reshape(watermark_extracted_rows, -1)
+    #stacking original watermark
+    watermark = watermark.astype(np.float64)
+    watermark_rows, watermark_columns = watermark.shape[:2] 
+    watermark_stacked = watermark.reshape(watermark_rows, -1)
+    #norm difference
+    error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
+    return error
