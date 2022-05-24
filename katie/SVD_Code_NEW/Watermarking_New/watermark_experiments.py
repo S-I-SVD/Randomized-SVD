@@ -190,11 +190,11 @@ def drawgraph_difference(x,y,plottype):
     #plt.show()
     #liutan
     if plottype == 1:
-        plt.savefig('../out/watermarking/plots/perceptibility/liutan/perceptibility_liutan.png')
+        plt.savefig('../out/watermarking/plots/perceptibility/liutan/perceptibility_liutan.eps')
     if plottype == 2:
-        plt.savefig('../out/watermarking/plots/perceptibility/jain/perceptibility_jain.png')
+        plt.savefig('../out/watermarking/plots/perceptibility/jain/perceptibility_jain.eps')
     if plottype == 3:
-        plt.savefig('../out/watermarking/plots/perceptibility/jainmod/perceptibility_jain_mod.png')
+        plt.savefig('../out/watermarking/plots/perceptibility/jainmod/perceptibility_jain_mod.eps')
     plt.show() 
     
     
