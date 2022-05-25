@@ -377,3 +377,29 @@ def modify_sigmas_log(img, scalar):
     reconstruction = reconstruction.reshape(img_rows,img_columns,-1)
     
     return reconstruction
+
+def modify_sigmas_log_s(img, scalar, s):
+    
+    modified_img_1 = modify_sigmas_log(img,scalar)
+    
+    #identifying scaling values based on logarithmic mapping
+    img_modified_1 = img_modified_1.ravel()
+    scaling_values = numpy.empty_like(img_modified_1)
+    for i in range(0,len(img_modified_1)):
+        if img_modified_1[i] == 0:
+            scaling_values[i] = 1
+        else:
+            scaling_values[i] = s
+      
+    #getting original rows and columns count
+    img_type = img.dtype
+    img_original = img.astype(np.float64)
+    img_original_rows, img_original_columns = img.shape[:2]
+    
+    #scaling the original image according to the scaling values identified earlier
+    img_modified_2 = img_original
+    for i in range(0,len(img_modified_2)):
+        img_modified_2[i] = img_original[i] * scaling_values[i]
+    img_modified_2 = img_modified_2.reshape(img_original_rows, img_original_columns,-1)
+    
+    return img_modified_2
