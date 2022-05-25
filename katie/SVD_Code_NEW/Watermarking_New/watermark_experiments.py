@@ -734,3 +734,67 @@ def crop_error_jain(img, watermark, scale, number, side):
     #norm difference
     error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
     return error
+
+def cropping_extractionerror_plot_liutan(img,watermark,row_or_column):
+    errors = []
+    if row_or_column = 'row':
+      xlabel_name = 'Rows Removed'
+      rows_choices = np.arange(1,201,1)
+      for rows in rows_choices: 
+        error = crop_error_liutan(img, watermark, 0.05, rows, 'bottom')
+        errors.append(error)
+    elif row_or_column = 'column':
+      xlabel_name = 'Columns Removed'
+      columns_choices = np.arange(1,201,1)
+      for columns in columns_choices: 
+        error = crop_error_liutan(img, watermark, 0.05, columns, 'left')
+        errors.append(error)
+    
+    plt.plot(errors0,marker='o')
+    plt.xlabel(xlabel_name)
+    plt.ylabel('Relative Error')
+    plt.legend()
+    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_liutan.eps'.format(row_or_column),bbox_inches='tight')
+
+
+def cropping_extractionerror_plot_jain(img,watermark,row_or_column):
+    errors = []
+    if row_or_column = 'row':
+      xlabel_name = 'Rows Removed'
+      rows_choices = np.arange(1,201,1)
+      for rows in rows_choices: 
+        error = crop_error_jain(img, watermark, 0.05, rows, 'bottom')
+        errors.append(error)
+    elif row_or_column = 'column':
+      xlabel_name = 'Columns Removed'
+      columns_choices = np.arange(1,201,1)
+      for columns in columns_choices: 
+        error = crop_error_jain(img, watermark, 0.05, columns, 'left')
+        errors.append(error)
+    
+    plt.plot(errors0,marker='o')
+    plt.xlabel(xlabel_name)
+    plt.ylabel('Relative Error')
+    plt.legend()
+    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_jain.eps'.format(row_or_column),bbox_inches='tight')
+
+def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column):
+    errors = []
+    if row_or_column = 'row':
+      xlabel_name = 'Rows Removed'
+      rows_choices = np.arange(1,201,1)
+      for rows in rows_choices: 
+        error = crop_error_jain_mod(img, watermark, 0.05, rows, 'bottom')
+        errors.append(error)
+    elif row_or_column = 'column':
+      xlabel_name = 'Columns Removed'
+      columns_choices = np.arange(1,201,1)
+      for columns in columns_choices: 
+        error = crop_error_jain_mod(img, watermark, 0.05, columns, 'left')
+        errors.append(error)
+    
+    plt.plot(errors0,marker='o')
+    plt.xlabel(xlabel_name)
+    plt.ylabel('Relative Error')
+    plt.legend()
+    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_jain_mod.eps'.format(row_or_column),bbox_inches='tight')
