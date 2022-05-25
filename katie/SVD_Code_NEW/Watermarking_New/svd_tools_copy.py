@@ -380,7 +380,24 @@ def modify_sigmas_log(img, scalar):
 
 def modify_sigmas_log_s(img, scalar, s):
     
-    modified_img_1 = modify_sigmas_log(img,scalar)
+    #logarithmic mapping (same as modify_sigmas_log)
+    
+    img_type = img.dtype
+    img = img.astype(np.float64)
+    
+    # Stack color channels
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    
+    U, S, VT = la.svd(img_stacked, full_matrices=False)
+
+    length_S = len(S)
+    for i in range(length_S):
+        S[i] = (math.log10(S[i]+1))**scalar
+    S = np.diag(S)
+    
+    img_modified_1 = U @ S @ VT
+    img_modified_1 = img_modified_1.reshape(img_rows,img_columns,-1)
     
     #identifying scaling values based on logarithmic mapping
     img_modified_1 = img_modified_1.ravel()
@@ -390,16 +407,49 @@ def modify_sigmas_log_s(img, scalar, s):
             scaling_values[i] = 1
         else:
             scaling_values[i] = s
-      
-    #getting original rows and columns count
-    img_type = img.dtype
-    img_original = img.astype(np.float64)
-    img_original_rows, img_original_columns = img.shape[:2]
-    
+  
     #scaling the original image according to the scaling values identified earlier
-    img_modified_2 = img_original
+    img_modified_2 = img
     for i in range(0,len(img_modified_2)):
         img_modified_2[i] = img_original[i] * scaling_values[i]
-    img_modified_2 = img_modified_2.reshape(img_original_rows, img_original_columns,-1)
+    img_modified_2 = img_modified_2.reshape(img_rows, img_columns,-1)
+    
+    return img_modified_2
+
+def modify_sigmas_log_s_rank_truncation(img, scalar, s, rank):
+    
+    #logarithmic mapping (same as modify_sigmas_log)
+    
+    img_type = img.dtype
+    img = img.astype(np.float64)
+    
+    # Stack color channels
+    img_rows, img_columns = img.shape[:2] 
+    img_stacked = img.reshape(img_rows, -1)
+    
+    U, S, VT = la.svd(img_stacked, full_matrices=False)
+
+    length_S = len(S)
+    for i in range(length_S):
+        S[i] = (math.log10(S[i]+1))**scalar
+    S = np.diag(S)
+    
+    modified_img_1 = U[:, :rank] @ np.diag(S[:rank]) @ VT[:rank, :]
+    img_modified_1 = img_modified_1.reshape(img_rows,img_columns,-1)
+    
+    #identifying scaling values based on logarithmic mapping
+    img_modified_1 = img_modified_1.ravel()
+    scaling_values = numpy.empty_like(img_modified_1)
+    for i in range(0,len(img_modified_1)):
+        if img_modified_1[i] == 0:
+            scaling_values[i] = 1
+        else:
+            scaling_values[i] = s
+  
+    #scaling the original image according to the scaling values identified earlier
+    img_modified_2 = img
+    for i in range(0,len(img_modified_2)):
+        img_modified_2[i] = img_original[i] * scaling_values[i]
+    img_modified_2 = img_modified_2.reshape(img_rows, img_columns,-1)
     
     return img_modified_2
