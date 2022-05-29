@@ -798,3 +798,101 @@ def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column):
     plt.ylabel('Relative Error')
     plt.legend()
     plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_jain_mod.eps'.format(row_or_column),bbox_inches='tight')
+
+    
+#extraction error plots
+
+def extraction_error_liutan(img, watermark, scale):
+    #watermarked image
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
+    #extracting watermark using original extraction key and compressed watermarked image
+    watermark_extracted = it.extract_watermark(img_watermarked, watermarked_u, mat_s, watermarked_vh,
+            scale=scale)
+    watermark_extracted = reversepad(watermark_extracted, watermark)
+    #stacking extracted watermark
+    watermark_extracted = watermark_extracted.astype(np.float64)
+    watermark_extracted_rows, watermark_extracted_columns = watermark_extracted.shape[:2] 
+    watermark_extracted_stacked = watermark_extracted.reshape(watermark_extracted_rows, -1)
+    #stacking original watermark
+    watermark = watermark.astype(np.float64)
+    watermark_rows, watermark_columns = watermark.shape[:2] 
+    watermark_stacked = watermark.reshape(watermark_rows, -1)
+    #norm difference
+    error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
+    return error
+
+def extraction_error_jain(img, watermark, scale, rank):
+    #watermarked image
+    img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
+    #extracting watermark using original extraction key and compressed watermarked image
+    watermark_extracted = it.extract_watermark_jain(img_watermarked, img, watermark_vh, scale)
+    watermark_extracted = reversepad(watermark_extracted, watermark)
+    #stacking extracted watermark
+    watermark_extracted = watermark_extracted.astype(np.float64)
+    watermark_extracted_rows, watermark_extracted_columns = watermark_extracted.shape[:2] 
+    watermark_extracted_stacked = watermark_extracted.reshape(watermark_extracted_rows, -1)
+    #stacking original watermark
+    watermark = watermark.astype(np.float64)
+    watermark_rows, watermark_columns = watermark.shape[:2] 
+    watermark_stacked = watermark.reshape(watermark_rows, -1)
+    #norm difference
+    error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
+    return error
+
+def extraction_error_jain_mod(img, watermark, scale, rank):
+    #watermarked image
+    img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
+    #extracting watermark using original extraction key and compressed watermarked image
+    watermark_extracted = it.extract_watermark_jain_mod(img_watermarked, img, watermark_vh, scale=scale)
+    watermark_extracted = reversepad(watermark_extracted, watermark)
+    #stacking extracted watermark
+    watermark_extracted = watermark_extracted.astype(np.float64)
+    watermark_extracted_rows, watermark_extracted_columns = watermark_extracted.shape[:2] 
+    watermark_extracted_stacked = watermark_extracted.reshape(watermark_extracted_rows, -1)
+    #stacking original watermark
+    watermark = watermark.astype(np.float64)
+    watermark_rows, watermark_columns = watermark.shape[:2] 
+    watermark_stacked = watermark.reshape(watermark_rows, -1)
+    #norm difference
+    error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
+    return error
+
+
+def extraction_error_plot(img,watermark,plottype):
+    scales = np.arange(0.05,2.05,0.05)
+    extraction_errors = []
+    #liu tan
+    if plottype == 1:
+        for scale in scales:
+            print(scale)
+            difference = extraction_error_liutan(img, watermark, scale)
+            differences.append(difference)
+    #jain
+    if plottype == 2:
+        for scale in scales:
+            print(scale)
+            extraction_error = extraction_error_jain(img, watermark, scale)
+            extraction_errors.append(extraction_error)
+            
+    #jain mod
+    if plottype == 3:
+        for scale in scales:
+            print(scale)
+            extraction_error = extraction_error_jain_mod(img, watermark, scale)
+            extraction_errors.append(extraction_error)
+    
+    drawgraph_extraction_error(scales,extraction_errors,plottype)
+    
+def drawgraph_extraction_error(x,y,plottype):
+    plt.plot(x,y,marker='o')
+    plt.xlabel('Alpha')
+    plt.ylabel('Error')
+    #plt.show()
+    #liutan
+    if plottype == 1:
+        plt.savefig('../out/watermarking/plots/extractionerror/liutan/extractionerror_liutan.eps')
+    if plottype == 2:
+        plt.savefig('../out/watermarking/plots/extractionerror/jain/extractionerror_jain.eps')
+    if plottype == 3:
+        plt.savefig('../out/watermarking/plots/extractionerror/jainmod/extractionerror_jain_mod.eps')
+    plt.show()
