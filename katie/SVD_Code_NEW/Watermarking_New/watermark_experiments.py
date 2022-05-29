@@ -158,7 +158,7 @@ def perceptibility_jain_mod(img, watermark, scale):
     return error
 
 
-def watermarkedplot(img,watermark,plottype):
+def watermarkedplot(img,watermark,plottype,name):
     scales = np.arange(0.05,2.05,0.05)
     differences = []
     #liu tan
@@ -181,20 +181,20 @@ def watermarkedplot(img,watermark,plottype):
             difference = perceptibility_jain_mod(img, watermark, scale)
             differences.append(difference)
     
-    drawgraph_difference(scales,differences,plottype)
+    drawgraph_difference(scales,differences,plottype,name)
     
-def drawgraph_difference(x,y,plottype):
+def drawgraph_difference(x,y,plottype,name):
     plt.plot(x,y,marker='o')
     plt.xlabel('Alpha')
     plt.ylabel('Error')
     #plt.show()
     #liutan
     if plottype == 1:
-        plt.savefig('../out/watermarking/plots/perceptibility/liutan/perceptibility_liutan.eps')
+        plt.savefig('../out/watermarking/plots/perceptibility/liutan/perceptibility_{}_liutan.eps'.format(name))
     if plottype == 2:
-        plt.savefig('../out/watermarking/plots/perceptibility/jain/perceptibility_jain.eps')
+        plt.savefig('../out/watermarking/plots/perceptibility/jain/perceptibility_{}_jain.eps'.format(name))
     if plottype == 3:
-        plt.savefig('../out/watermarking/plots/perceptibility/jainmod/perceptibility_jain_mod.eps')
+        plt.savefig('../out/watermarking/plots/perceptibility/jainmod/perceptibility_{}_jain_mod.eps'.format(name))
     plt.show() 
     
     
@@ -858,7 +858,7 @@ def extraction_error_jain_mod(img, watermark, scale, rank):
     return error
 
 
-def extraction_error_plot(img,watermark,plottype):
+def extraction_error_plot(img,watermark,plottype,name):
     scales = np.arange(0.05,2.05,0.05)
     extraction_errors = []
     #liu tan
@@ -881,18 +881,18 @@ def extraction_error_plot(img,watermark,plottype):
             extraction_error = extraction_error_jain_mod(img, watermark, scale)
             extraction_errors.append(extraction_error)
     
-    drawgraph_extraction_error(scales,extraction_errors,plottype)
+    drawgraph_extraction_error(scales,extraction_errors,plottype,name)
     
-def drawgraph_extraction_error(x,y,plottype):
+def drawgraph_extraction_error(x,y,plottype,name):
     plt.plot(x,y,marker='o')
     plt.xlabel('Alpha')
     plt.ylabel('Error')
     #plt.show()
     #liutan
     if plottype == 1:
-        plt.savefig('../out/watermarking/plots/extractionerror/liutan/extractionerror_liutan.eps')
+        plt.savefig('../out/watermarking/plots/extractionerror/liutan/extractionerror_{}_liutan.eps'.format(name))
     if plottype == 2:
-        plt.savefig('../out/watermarking/plots/extractionerror/jain/extractionerror_jain.eps')
+        plt.savefig('../out/watermarking/plots/extractionerror/jain/extractionerror_{}_jain.eps'.format(name))
     if plottype == 3:
-        plt.savefig('../out/watermarking/plots/extractionerror/jainmod/extractionerror_jain_mod.eps')
+        plt.savefig('../out/watermarking/plots/extractionerror/jainmod/extractionerror_{}_jain_mod.eps'.format(name))
     plt.show()
