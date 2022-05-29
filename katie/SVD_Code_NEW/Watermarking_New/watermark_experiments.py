@@ -462,13 +462,102 @@ def lowrank_extractionerror_plot_jain_mod(img,watermark):
     plt.savefig('../out/watermarking/plots/lowrankcompression/jainmod/lowrank_extractionerror_jain_mod.eps',bbox_inches='tight')
     
     
+def lowrank_extractionerror_plot_random_liutan(img,watermark):
+    alphas = (0.05,0.1,0.5,0.75)
+    ranks = np.arange(1,300)
+    errors0 = []
+    for rank in ranks:
+        error0 = lowrank_error_liutan(img,watermark,alphas[0],rank)
+        errors0.append(error0)
+        print("liutan",rank)
+    errors1 = []
+    for rank in ranks:
+        error1 = lowrank_error_liutan(img,watermark,alphas[1],rank)
+        errors1.append(error1)
+        print("liutan",rank)
+    errors2 = []
+    for rank in ranks:
+        error2 = lowrank_error_liutan(img,watermark,alphas[2],rank)
+        errors2.append(error2)
+        print("liutan",rank)
+    errors3 = []
+    for rank in ranks:
+        error3 = lowrank_error_liutan(img,watermark,alphas[3],rank)
+        errors3.append(error3)
+        print("liutan",rank)
+    plt.plot(errors0,label="a = {0}".format(alphas[0]))
+    plt.plot(errors1,label="a = {0}".format(alphas[1]))
+    plt.plot(errors2,label="a = {0}".format(alphas[2]))
+    plt.plot(errors3,label="a = {0}".format(alphas[3]))
+    plt.xlabel('Rank')
+    plt.ylabel('Error')
+    plt.legend()
+    plt.savefig('../out/watermarking/plots/lowrankcompression/liutan/lowrank_extractionerror_random_liutan.eps',bbox_inches='tight')
+
+
+def lowrank_extractionerror_plot_random_jain(img,watermark):
+    alphas = (0.05,0.1,0.5,0.75)
+    ranks = np.arange(1,300)
+    errors0 = []
+    for rank in ranks:
+        error0 = lowrank_error_jain(img,watermark,alphas[0],rank)
+        errors0.append(error0)
+        print("jain",rank)
+    errors1 = []
+    for rank in ranks:
+        error1 = lowrank_error_jain(img,watermark,alphas[1],rank)
+        errors1.append(error1)
+        print("jain",rank)
+    errors2 = []
+    for rank in ranks:
+        error2 = lowrank_error_jain(img,watermark,alphas[2],rank)
+        errors2.append(error2)
+        print("jain",rank)
+    errors3 = []
+    for rank in ranks:
+        error3 = lowrank_error_jain(img,watermark,alphas[3],rank)
+        errors3.append(error3)
+        print("jain",rank)
+    plt.plot(errors0,label="a = {0}".format(alphas[0]))
+    plt.plot(errors1,label="a = {0}".format(alphas[1]))
+    plt.plot(errors2,label="a = {0}".format(alphas[2]))
+    plt.plot(errors3,label="a = {0}".format(alphas[3]))
+    plt.xlabel('Rank')
+    plt.ylabel('Error')
+    plt.legend()
+    plt.savefig('../out/watermarking/plots/lowrankcompression/jain/lowrank_extractionerror_random_jain.eps',bbox_inches='tight')
     
-    
-    
-    
-    
-    
-    
+def lowrank_extractionerror_plot_random_jain_mod(img,watermark):
+    alphas = (0.05,0.1,0.25,0.5,0.75)
+    ranks = np.arange(1,300)
+    errors0 = []
+    for rank in ranks:
+        error0 = lowrank_error_jain_mod(img,watermark,alphas[0],rank)
+        errors0.append(error0)
+        print("jain mod",rank)
+    errors1 = []
+    for rank in ranks:
+        error1 = lowrank_error_jain_mod(img,watermark,alphas[1],rank)
+        errors1.append(error1)
+        print("jain mod",rank)
+    errors2 = []
+    for rank in ranks:
+        error2 = lowrank_error_jain_mod(img,watermark,alphas[2],rank)
+        errors2.append(error2)
+        print("jain mod",rank)
+    errors3 = []
+    for rank in ranks:
+        error3 = lowrank_error_jain_mod(img,watermark,alphas[3],rank)
+        errors3.append(error3)
+        print("jain mod",rank)
+    plt.plot(errors0,label="a = {0}".format(alphas[0]))
+    plt.plot(errors1,label="a = {0}".format(alphas[1]))
+    plt.plot(errors2,label="a = {0}".format(alphas[2]))
+    plt.plot(errors3,label="a = {0}".format(alphas[3]))
+    plt.xlabel('Rank')
+    plt.ylabel('Error')
+    plt.legend()
+    plt.savefig('../out/watermarking/plots/lowrankcompression/jainmod/lowrank_extractionerror_random_jain_mod.eps',bbox_inches='tight')
     
     
 #cropping tests 
