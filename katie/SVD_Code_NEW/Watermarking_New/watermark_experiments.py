@@ -703,7 +703,7 @@ def crop_error_jain(img, watermark, scale, number, side):
     error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
     return error
 
-def crop_error_jain(img, watermark, scale, number, side):
+def crop_error_jain_mod(img, watermark, scale, number, side):
     img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
     img_rows, img_columns = img.shape[:2] 
