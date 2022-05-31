@@ -115,12 +115,12 @@ def perceptibility_liutan(img, watermark, scale):
     #watermarked image
     img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
     #stacking watermarked image
-    img_watermarked = img_watermarked.astype(np.int32)
+    img_watermarked = img_watermarked.astype(np.float64)
 
     img_watermarked_rows, img_watermarked_columns = img_watermarked.shape[:2] 
     img_watermarked_stacked = img_watermarked.reshape(img_watermarked_rows, -1)
     #stacking image
-    img = img.astype(np.int32)
+    img = img.astype(np.float64)
     img_rows, img_columns = img.shape[:2] 
     img_stacked = img.reshape(img_rows, -1)
     #norm difference
@@ -131,11 +131,11 @@ def perceptibility_jain(img, watermark, scale):
     #watermarked image
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
     #stacking watermarked image
-    img_watermarked = img_watermarked.astype(np.int32)
+    img_watermarked = img_watermarked.astype(np.float64)
     img_watermarked_rows, img_watermarked_columns = img_watermarked.shape[:2] 
     img_watermarked_stacked = img_watermarked.reshape(img_watermarked_rows, -1)
     #stacking image
-    img = img.astype(np.int32)
+    img = img.astype(np.float64)
     img_rows, img_columns = img.shape[:2] 
     img_stacked = img.reshape(img_rows, -1)
     #norm difference
@@ -146,11 +146,11 @@ def perceptibility_jain_mod(img, watermark, scale):
     #watermarked image
     img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     #stacking watermarked image
-    img_watermarked = img_watermarked.astype(np.int32)
+    img_watermarked = img_watermarked.astype(np.float64)
     img_watermarked_rows, img_watermarked_columns = img_watermarked.shape[:2] 
     img_watermarked_stacked = img_watermarked.reshape(img_watermarked_rows, -1)
     #stacking image
-    img = img.astype(np.int32)
+    img = img.astype(np.float64)
     img_rows, img_columns = img.shape[:2] 
     img_stacked = img.reshape(img_rows, -1)
     #norm difference
