@@ -208,7 +208,7 @@ def drawgraph_difference(x,y,plottype,name):
 #lowrank extraction error
     
 
-def lowrank_image_liutan(img, watermark, scale, rank, save):
+def lowrank_image_liutan(img, watermark, scale, rank, save,name):
     #watermarked image
     img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
@@ -225,10 +225,10 @@ def lowrank_image_liutan(img, watermark, scale, rank, save):
     if save=='no':
         return watermark_extracted
     elif save=='yes':
-        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/liutan/extraction_rank_{}_alpha_{}.png'.format(rank,scale))
+        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/liutan/extraction_{}_rank_{}_alpha_{}.png'.format(name,rank,scale))
         
 
-def lowrank_watermarked_image_liutan(img, watermark, scale, rank, save):
+def lowrank_watermarked_image_liutan(img, watermark, scale, rank, save,name):
     #watermarked image
     img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
@@ -240,9 +240,9 @@ def lowrank_watermarked_image_liutan(img, watermark, scale, rank, save):
     if save=='no':
         return img_watermarked_approx
     elif save=='yes':
-        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/liutan/embedding_rank_{}_alpha_{}.png'.format(rank,scale))
+        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/liutan/embedding_{}_rank_{}_alpha_{}.png'.format(name,rank,scale))
     
-def lowrank_image_jain(img, watermark, scale, rank, save):
+def lowrank_image_jain(img, watermark, scale, rank, save,name):
     #watermarked image
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
@@ -258,10 +258,10 @@ def lowrank_image_jain(img, watermark, scale, rank, save):
     if save=='no':
         return watermark_extracted
     elif save=='yes':
-        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/jain/extraction_rank_{}_alpha_{}.png'.format(rank,scale))
+        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/jain/extraction_{}_rank_{}_alpha_{}.png'.format(name,rank,scale))
     
     
-def lowrank_watermarked_image_jain(img, watermark, scale, rank, save):
+def lowrank_watermarked_image_jain(img, watermark, scale, rank, save,name):
     #watermarked image
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
@@ -272,10 +272,10 @@ def lowrank_watermarked_image_jain(img, watermark, scale, rank, save):
     if save=='no':
         return img_watermarked_approx
     elif save=='yes':
-        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/jain/embedding_rank_{}_alpha_{}.png'.format(rank,scale))
+        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/jain/embedding_{}_rank_{}_alpha_{}.png'.format(name,rank,scale))
     
     
-def lowrank_image_jain_mod(img, watermark, scale, rank,save):
+def lowrank_image_jain_mod(img, watermark, scale, rank,save,name):
     #watermarked image
     img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
@@ -288,9 +288,9 @@ def lowrank_image_jain_mod(img, watermark, scale, rank,save):
     if save=='no':
         return watermark_extracted
     elif save=='yes':
-        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/jainmod/extraction_rank_{}_alpha_{}.png'.format(rank,scale))
+        it.save_image(watermark_extracted,'../out/watermarking/robustness/lowrankextraction/jainmod/extraction_{}_rank_{}_alpha_{}.png'.format(name,rank,scale))
     
-def lowrank_watermarked_image_jain_mod(img, watermark, scale, rank,save):
+def lowrank_watermarked_image_jain_mod(img, watermark, scale, rank,save,name):
     #watermarked image
     img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
@@ -300,7 +300,7 @@ def lowrank_watermarked_image_jain_mod(img, watermark, scale, rank,save):
     if save=='no':
         return img_watermarked_approx
     elif save=='yes':
-        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/jainmod/embedding_rank_{}_alpha_{}.png'.format(rank,scale))
+        it.save_image(img_watermarked_approx,'../out/watermarking/robustness/lowrankembedding/jainmod/embedding_{}_rank_{}_alpha_{}.png'.format(name,rank,scale))
     
     
 def lowrank_error_liutan(img, watermark, scale, rank):
