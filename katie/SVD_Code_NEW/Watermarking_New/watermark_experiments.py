@@ -49,17 +49,17 @@ def reversepad3d(watermark_extracted,original_watermark):
     watermark_extracted = watermark_extracted[:sizes[0],:sizes[1],:sizes[2]]
     return watermark_extracted
 
-def watermark_embed_liutan(img, watermark, scale, save):
+def watermark_embed_liutan(img, watermark, scale, save,name):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/liutan
     img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
     if save=='no':
         return img_watermarked
     elif save=='yes':
-        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/liutan/watermarked_image_alpha_{}.png'.format(scale))
+        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/liutan/watermarked_image_{}_alpha_{}.png'.format(name,scale))
         #Image.fromarray(img_watermarked,'RGB').save('../out/watermarking/watermarked_image/liutan/watermarked_image_alpha_{}.png'.format(scale), 'PNG')
     
-def watermark_extract_liutan(img, watermark, scale, save):
+def watermark_extract_liutan(img, watermark, scale, save,name):
     #embeds watermark into image and then extracts the watermark. if save == 'yes', then it will save to out/res/watermark
     img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
     watermark_extracted = it.extract_watermark(img_watermarked, watermarked_u, mat_s, watermarked_vh,
@@ -69,18 +69,18 @@ def watermark_extract_liutan(img, watermark, scale, save):
     if save=='no':
         return watermark_extracted_final
     elif save=='yes':
-        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/liutan/extracted_watermark_alpha_{}.png'.format(scale))
+        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/liutan/extracted_watermark_{}_alpha_{}.png'.format(name,scale))
     
-def watermark_embed_jain(img, watermark, scale, save):
+def watermark_embed_jain(img, watermark, scale, save,name):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jain
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
     if save=='no':
         return img_watermarked
     elif save=='yes':
-        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/jain/watermarked_image_alpha_{}.png'.format(scale))
+        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/jain/watermarked_image_{}_alpha_{}.png'.format(name,scale))
     
-def watermark_extract_jain(img, watermark, scale, save):
+def watermark_extract_jain(img, watermark, scale, save,name):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jain
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
     watermark_extracted = it.extract_watermark_jain(img_watermarked, img, watermark_vh, scale)
@@ -89,18 +89,18 @@ def watermark_extract_jain(img, watermark, scale, save):
     if save=='no':
         return watermark_extracted_final
     elif save=='yes':
-        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/jain/extracted_watermark_alpha_{}.png'.format(scale))
+        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/jain/extracted_watermark_{}_alpha_{}.png'.format(name,scale))
     
-def watermark_embed_jain_mod(img, watermark, scale, save):
+def watermark_embed_jain_mod(img, watermark, scale, save,name):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jainmod
     img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
     if save=='no':
         return img_watermarked
     elif save=='yes':
-        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/jainmod/watermarked_image_alpha_{}.png'.format(scale))
+        it.save_image(img_watermarked,'../out/watermarking/watermarked_image/jainmod/watermarked_image_{}_alpha_{}.png'.format(name,scale))
     
-def watermark_extract_jain_mod(img, watermark, scale, save):
+def watermark_extract_jain_mod(img, watermark, scale, name):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jainmod
     img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     watermark_extracted = it.extract_watermark_jain_mod(img_watermarked, img, watermark_vh, scale)
@@ -109,7 +109,7 @@ def watermark_extract_jain_mod(img, watermark, scale, save):
     if save=='no':
         return watermark_extracted_final
     elif save=='yes':
-        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/jainmod/extracted_watermark_alpha_{}.png'.format(scale))
+        it.save_image(watermark_extracted_final,'../out/watermarking/extracted_watermark/jainmod/extracted_watermark_{}_alpha_{}.png'.format(name,scale))
         
 def perceptibility_liutan(img, watermark, scale):
     #watermarked image
