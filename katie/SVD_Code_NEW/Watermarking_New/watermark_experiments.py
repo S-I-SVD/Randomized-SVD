@@ -461,6 +461,62 @@ def lowrank_extractionerror_plot_jain_mod(img,watermark):
     plt.legend()
     plt.savefig('../out/watermarking/plots/lowrankcompression/jainmod/lowrank_extractionerror_jain_mod.eps',bbox_inches='tight')
     
+def lowrank_spectral_error_liutan(img, watermark, scale, rank):
+    #watermarked image
+    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark(img, watermark, scale=scale)
+    #applying low rank compression to watermarked image
+    img_watermarked_approx = it.lowrankapprox(img_watermarked,rank)
+    #extracting watermark using original extraction key and compressed watermarked image
+    watermark_extracted = it.extract_watermark(img_watermarked_approx, watermarked_u, mat_s, watermarked_vh,
+            scale=scale)
+    watermark_extracted = reversepad(watermark_extracted, watermark)
+    #stacking extracted watermark
+    watermark_extracted = watermark_extracted.astype(np.float64)
+    watermark_extracted_rows, watermark_extracted_columns = watermark_extracted.shape[:2] 
+    watermark_extracted_stacked = watermark_extracted.reshape(watermark_extracted_rows, -1)
+    watermark_extracted_stacked_u, watermark_extracted_stacked_s, watermark_extracted_stacked_vh = np.linalg.svd(watermark_extracted_stacked)
+    max_sv_watermark_extracted_stacked = watermark_extracted_stacked_s.max()
+    #stacking original watermark
+    watermark = watermark.astype(np.float64)
+    watermark_rows, watermark_columns = watermark.shape[:2] 
+    watermark_stacked = watermark.reshape(watermark_rows, -1)
+    watermark_stacked_u, watermark_stacked_s, watermark_stacked_vh = np.linalg.svd(watermark_stacked)
+    max_sv_watermark_stacked = watermark_stacked_s.max()
+    #spectral norm difference
+    error = (max_sv_watermark_extracted_stacked-max_sv_watermark_stacked)/(max_sv_watermark_stacked)
+    return error
+
+def lowrank_spectral_extractionerror_plot_liutan(img,watermark):
+    alphas = (0.05,0.1,0.5,0.75)
+    ranks = np.arange(1,300)
+    errors0 = []
+    for rank in ranks:
+        error0 = lowrank_spectral_error_liutan(img,watermark,alphas[0],rank)
+        errors0.append(error0)
+        print("liutan",rank)
+    errors1 = []
+    for rank in ranks:
+        error1 = lowrank_spectral_error_liutan(img,watermark,alphas[1],rank)
+        errors1.append(error1)
+        print("liutan",rank)
+    errors2 = []
+    for rank in ranks:
+        error2 = lowrank_spectral_error_liutan(img,watermark,alphas[2],rank)
+        errors2.append(error2)
+        print("liutan",rank)
+    errors3 = []
+    for rank in ranks:
+        error3 = lowrank_spectral_error_liutan(img,watermark,alphas[3],rank)
+        errors3.append(error3)
+        print("liutan",rank)
+    plt.plot(errors0,label="a = {0}".format(alphas[0]))
+    plt.plot(errors1,label="a = {0}".format(alphas[1]))
+    plt.plot(errors2,label="a = {0}".format(alphas[2]))
+    plt.plot(errors3,label="a = {0}".format(alphas[3]))
+    plt.xlabel('Rank')
+    plt.ylabel('Error (Spectral Norm)')
+    plt.legend()
+    plt.savefig('../out/watermarking/plots/lowrankcompression/liutan/lowrank_spectral_extractionerror_liutan.eps',bbox_inches='tight')
     
 def lowrank_extractionerror_plot_random_liutan(img,watermark):
     alphas = (0.05,0.1,0.5,0.75)
