@@ -966,7 +966,7 @@ def extraction_error_liutan(img, watermark, scale):
     error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
     return error
 
-def extraction_error_jain(img, watermark, scale, rank):
+def extraction_error_jain(img, watermark, scale):
     #watermarked image
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
     #extracting watermark using original extraction key and compressed watermarked image
@@ -984,11 +984,11 @@ def extraction_error_jain(img, watermark, scale, rank):
     error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
     return error
 
-def extraction_error_jain_mod(img, watermark, scale, rank):
+def extraction_error_jain_mod(img, watermark, scale):
     #watermarked image
     img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     #extracting watermark using original extraction key and compressed watermarked image
-    watermark_extracted = it.extract_watermark_jain_mod(img_watermarked, img, watermark_vh, scale=scale)
+    watermark_extracted = it.extract_watermark_jain_mod(img_watermarked_approx, img, watermark_vh, scale=scale)
     watermark_extracted = reversepad(watermark_extracted, watermark)
     #stacking extracted watermark
     watermark_extracted = watermark_extracted.astype(np.float64)
