@@ -882,13 +882,13 @@ def crop_error_jain_mod(img, watermark, scale, number, side):
 
 def cropping_extractionerror_plot_liutan(img,watermark,row_or_column):
     errors = []
-    if row_or_column = 'row':
+    if row_or_column == 'row':
       xlabel_name = 'Rows Removed'
       rows_choices = np.arange(1,201,1)
       for rows in rows_choices: 
         error = crop_error_liutan(img, watermark, 0.05, rows, 'bottom')
         errors.append(error)
-    elif row_or_column = 'column':
+    elif row_or_column == 'column':
       xlabel_name = 'Columns Removed'
       columns_choices = np.arange(1,201,1)
       for columns in columns_choices: 
@@ -904,13 +904,13 @@ def cropping_extractionerror_plot_liutan(img,watermark,row_or_column):
 
 def cropping_extractionerror_plot_jain(img,watermark,row_or_column):
     errors = []
-    if row_or_column = 'row':
+    if row_or_column == 'row':
       xlabel_name = 'Rows Removed'
       rows_choices = np.arange(1,201,1)
       for rows in rows_choices: 
         error = crop_error_jain(img, watermark, 0.05, rows, 'bottom')
         errors.append(error)
-    elif row_or_column = 'column':
+    elif row_or_column == 'column':
       xlabel_name = 'Columns Removed'
       columns_choices = np.arange(1,201,1)
       for columns in columns_choices: 
@@ -925,13 +925,13 @@ def cropping_extractionerror_plot_jain(img,watermark,row_or_column):
 
 def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column):
     errors = []
-    if row_or_column = 'row':
+    if row_or_column == 'row':
       xlabel_name = 'Rows Removed'
       rows_choices = np.arange(1,201,1)
       for rows in rows_choices: 
         error = crop_error_jain_mod(img, watermark, 0.05, rows, 'bottom')
         errors.append(error)
-    elif row_or_column = 'column':
+    elif row_or_column == 'column':
       xlabel_name = 'Columns Removed'
       columns_choices = np.arange(1,201,1)
       for columns in columns_choices: 
