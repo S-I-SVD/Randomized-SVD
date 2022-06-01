@@ -1010,8 +1010,8 @@ def extraction_error_plot(img,watermark,plottype,name):
     if plottype == 1:
         for scale in scales:
             print(scale)
-            difference = extraction_error_liutan(img, watermark, scale)
-            differences.append(difference)
+            extraction_error = extraction_error_liutan(img, watermark, scale)
+            extraction_errors.append(difference)
     #jain
     if plottype == 2:
         for scale in scales:
