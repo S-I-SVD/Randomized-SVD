@@ -880,7 +880,7 @@ def crop_error_jain_mod(img, watermark, scale, number, side):
     error = (np.linalg.norm(watermark_extracted_stacked-watermark_stacked))/(np.linalg.norm(watermark_stacked))
     return error
 
-def cropping_extractionerror_plot_liutan(img,watermark,row_or_column):
+def cropping_extractionerror_plot_liutan(img,watermark,row_or_column,name):
     errors = []
     if row_or_column == 'row':
       xlabel_name = 'Rows Removed'
@@ -899,10 +899,10 @@ def cropping_extractionerror_plot_liutan(img,watermark,row_or_column):
     plt.xlabel(xlabel_name)
     plt.ylabel('Relative Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_liutan.eps'.format(row_or_column),bbox_inches='tight')
+    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_{}_liutan.eps'.format(name,row_or_column),bbox_inches='tight')
 
 
-def cropping_extractionerror_plot_jain(img,watermark,row_or_column):
+def cropping_extractionerror_plot_jain(img,watermark,row_or_column,name):
     errors = []
     if row_or_column == 'row':
       xlabel_name = 'Rows Removed'
@@ -921,9 +921,9 @@ def cropping_extractionerror_plot_jain(img,watermark,row_or_column):
     plt.xlabel(xlabel_name)
     plt.ylabel('Relative Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_jain.eps'.format(row_or_column),bbox_inches='tight')
+    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_{}_jain.eps'.format(name,row_or_column),bbox_inches='tight')
 
-def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column):
+def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column,name):
     errors = []
     if row_or_column == 'row':
       xlabel_name = 'Rows Removed'
@@ -942,7 +942,7 @@ def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column):
     plt.xlabel(xlabel_name)
     plt.ylabel('Relative Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_jain_mod.eps'.format(row_or_column),bbox_inches='tight')
+    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_{}_jain_mod.eps'.format(name,row_or_column),bbox_inches='tight')
 
     
 #extraction error plots
