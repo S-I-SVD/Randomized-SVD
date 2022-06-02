@@ -100,7 +100,7 @@ def watermark_embed_jain_mod(img, watermark, scale, save,name):
     elif save=='yes':
         it.save_image(img_watermarked,'../out/watermarking/watermarked_image/jainmod/watermarked_image_{}_alpha_{}.png'.format(name,scale))
     
-def watermark_extract_jain_mod(img, watermark, scale, name):
+def watermark_extract_jain_mod(img, watermark, scale,save, name):
     #embeds watermark into image. if save == 'yes', then it will save to out/watermarking/watermarked_image/jainmod
     img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     watermark_extracted = it.extract_watermark_jain_mod(img_watermarked, img, watermark_vh, scale)
