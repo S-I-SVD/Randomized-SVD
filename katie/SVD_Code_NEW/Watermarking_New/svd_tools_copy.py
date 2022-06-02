@@ -384,6 +384,7 @@ def modify_sigmas_log_s(img, scalar, s):
     
     img_type = img.dtype
     img = img.astype(np.float64)
+    img_original = img
     
     # Stack color channels
     img_rows, img_columns = img.shape[:2] 
@@ -422,6 +423,7 @@ def modify_sigmas_log_s_rank_truncation(img, scalar, s, rank):
     
     img_type = img.dtype
     img = img.astype(np.float64)
+    img_original = img
     
     # Stack color channels
     img_rows, img_columns = img.shape[:2] 
