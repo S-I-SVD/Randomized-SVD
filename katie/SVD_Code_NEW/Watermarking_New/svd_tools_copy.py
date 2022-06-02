@@ -401,7 +401,7 @@ def modify_sigmas_log_s(img, scalar, s):
     
     #identifying scaling values based on logarithmic mapping
     img_modified_1 = img_modified_1.ravel()
-    scaling_values = numpy.empty_like(img_modified_1)
+    scaling_values = np.empty_like(img_modified_1)
     for i in range(0,len(img_modified_1)):
         if img_modified_1[i] == 0:
             scaling_values[i] = 1
@@ -439,7 +439,7 @@ def modify_sigmas_log_s_rank_truncation(img, scalar, s, rank):
     
     #identifying scaling values based on logarithmic mapping
     img_modified_1 = img_modified_1.ravel()
-    scaling_values = numpy.empty_like(img_modified_1)
+    scaling_values = np.empty_like(img_modified_1)
     for i in range(0,len(img_modified_1)):
         if img_modified_1[i] == 0:
             scaling_values[i] = 1
