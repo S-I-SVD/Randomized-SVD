@@ -766,7 +766,7 @@ def crop_extract_watermark_jain_mod(img, watermark, scale, number, side,name):
     img_stacked = img.reshape(img_rows, -1)
     #img_stacked = img_stacked.astype(np.int32)
     if side == 'left':
-        croppedwatermarked_image = crop_left(img_watermarked, number)
+        cropped_watermarked_image = crop_left(img_watermarked, number)
     elif side == 'right':
         cropped_watermarked_image = crop_right(img_watermarked, number)
     elif side == 'bottom':
