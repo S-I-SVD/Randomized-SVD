@@ -895,7 +895,7 @@ def cropping_extractionerror_plot_liutan(img,watermark,row_or_column,name):
         error = crop_error_liutan(img, watermark, 0.05, columns, 'left')
         errors.append(error)
     
-    plt.plot(errors0,marker='o')
+    plt.plot(errors,marker='o')
     plt.xlabel(xlabel_name)
     plt.ylabel('Relative Error')
     plt.legend()
@@ -917,7 +917,7 @@ def cropping_extractionerror_plot_jain(img,watermark,row_or_column,name):
         error = crop_error_jain(img, watermark, 0.05, columns, 'left')
         errors.append(error)
     
-    plt.plot(errors0,marker='o')
+    plt.plot(errors,marker='o')
     plt.xlabel(xlabel_name)
     plt.ylabel('Relative Error')
     plt.legend()
@@ -938,7 +938,7 @@ def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column,name):
         error = crop_error_jain_mod(img, watermark, 0.05, columns, 'left')
         errors.append(error)
     
-    plt.plot(errors0,marker='o')
+    plt.plot(errors,marker='o')
     plt.xlabel(xlabel_name)
     plt.ylabel('Relative Error')
     plt.legend()
