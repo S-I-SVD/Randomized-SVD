@@ -819,7 +819,7 @@ def crop_error_liutan(img, watermark, scale, number, side):
 
 
 def crop_error_jain(img, watermark, scale, number, side):
-    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark_jain(img, watermark, scale=scale)
+    img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
     img_rows, img_columns = img.shape[:2] 
     img_stacked = img.reshape(img_rows, -1)
@@ -835,8 +835,7 @@ def crop_error_jain(img, watermark, scale, number, side):
         
     cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
     cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
-    watermark_extracted = it.extract_watermark_jain(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
-            scale=scale)
+    watermark_extracted = it.extract_watermark_jain(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted = reversepad(watermark_extracted, watermark)
     #stacking extracted watermark
     watermark_extracted = watermark_extracted.astype(np.float64)
@@ -851,7 +850,7 @@ def crop_error_jain(img, watermark, scale, number, side):
     return error
 
 def crop_error_jain_mod(img, watermark, scale, number, side):
-    img_watermarked, watermarked_u, mat_s, watermarked_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
+    img_watermarked, watermark_vh = it.embed_watermark_jain_mod(img, watermark, scale=scale)
     img_watermarked = img_watermarked.astype(np.int32)
     img_rows, img_columns = img.shape[:2] 
     img_stacked = img.reshape(img_rows, -1)
@@ -867,8 +866,7 @@ def crop_error_jain_mod(img, watermark, scale, number, side):
         
     cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
     cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
-    watermark_extracted = it.extract_watermark_jain_mod(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
-            scale=scale)
+    watermark_extracted = it.extract_watermark_jain_mod(cropped_watermarked_image_padded, img, watermark_vh, scale=scale)
     watermark_extracted = reversepad(watermark_extracted, watermark)
     #stacking extracted watermark
     watermark_extracted = watermark_extracted.astype(np.float64)
