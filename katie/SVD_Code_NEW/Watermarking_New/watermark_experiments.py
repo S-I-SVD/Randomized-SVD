@@ -925,7 +925,7 @@ def cropping_extractionerror_plot_jain(img,watermark,row_or_column,name):
     plt.xlabel(xlabel_name)
     plt.ylabel('Relative Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_{}_jain.eps'.format(name,row_or_column),bbox_inches='tight')
+    plt.savefig('../out/watermarking/plots/cropping/jain/cropping_extractionerror_{}_{}_jain.eps'.format(name,row_or_column),bbox_inches='tight')
     plt.show()
     
 def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column,name):
@@ -949,7 +949,7 @@ def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column,name):
     plt.xlabel(xlabel_name)
     plt.ylabel('Relative Error')
     plt.legend()
-    plt.savefig('../out/watermarking/plots/cropping/liutan/cropping_extractionerror_{}_{}_jain_mod.eps'.format(name,row_or_column),bbox_inches='tight')
+    plt.savefig('../out/watermarking/plots/cropping/jainmod/cropping_extractionerror_{}_{}_jain_mod.eps'.format(name,row_or_column),bbox_inches='tight')
     plt.show()
     
 #extraction error plots
