@@ -949,6 +949,29 @@ def cropping_extractionerror_plot_jain_mod(img,watermark,row_or_column,name):
     plt.savefig('../out/watermarking/plots/cropping/jainmod/cropping_extractionerror_{}_{}_jain_mod.eps'.format(name,row_or_column),bbox_inches='tight')
     plt.show()
     
+def cropping_extractionerror_plot_jain_mod_400_rows(img,watermark,row_or_column,name):
+    errors = []
+    if row_or_column == 'row':
+      xlabel_name = 'Rows Removed'
+      rows_choices = np.arange(1,401,1)
+      for rows in rows_choices: 
+        print(rows)
+        error = crop_error_jain_mod(img, watermark, 0.05, rows, 'bottom')
+        errors.append(error)
+    elif row_or_column == 'column':
+      xlabel_name = 'Columns Removed'
+      columns_choices = np.arange(1,401,1)
+      for columns in columns_choices: 
+        print(columns)
+        error = crop_error_jain_mod(img, watermark, 0.05, columns, 'left')
+        errors.append(error)
+    
+    plt.plot(errors,marker='o')
+    plt.xlabel(xlabel_name)
+    plt.ylabel('Relative Error')
+    plt.savefig('../out/watermarking/plots/cropping/jainmod/cropping_extractionerror_400_{}_{}_jain_mod.eps'.format(name,row_or_column),bbox_inches='tight')
+    plt.show()
+    
 #extraction error plots
 
 def extraction_error_liutan(img, watermark, scale):
