@@ -803,7 +803,6 @@ def crop_error_liutan(img, watermark, scale, number, side):
     watermark_extracted = it.extract_watermark(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
             scale=scale)
     watermark_extracted = reversepad(watermark_extracted, watermark)
-    print(watermark_extracted.shape)
     #stacking extracted watermark
     watermark_extracted = watermark_extracted.astype(np.float64)
     watermark_extracted_rows, watermark_extracted_columns = watermark_extracted.shape[:2] 
