@@ -190,11 +190,11 @@ def drawgraph_difference(x,y,plottype,name):
     #plt.show()
     #liutan
     if plottype == 1:
-        plt.savefig('../out/watermarking/plots/perceptibility/liutan/perceptibility_{}_liutan.eps'.format(name))
+        plt.savefig('../out/watermarking/plots/perceptibility/liutan/perceptibility_{}_liutan.eps'.format(name),bbox_inches='tight')
     if plottype == 2:
-        plt.savefig('../out/watermarking/plots/perceptibility/jain/perceptibility_{}_jain.eps'.format(name))
+        plt.savefig('../out/watermarking/plots/perceptibility/jain/perceptibility_{}_jain.eps'.format(name),bbox_inches='tight')
     if plottype == 3:
-        plt.savefig('../out/watermarking/plots/perceptibility/jainmod/perceptibility_{}_jain_mod.eps'.format(name))
+        plt.savefig('../out/watermarking/plots/perceptibility/jainmod/perceptibility_{}_jain_mod.eps'.format(name),bbox_inches='tight')
     plt.show() 
     
     
@@ -1062,9 +1062,9 @@ def drawgraph_extraction_error(x,y,plottype,name):
     #plt.show()
     #liutan
     if plottype == 1:
-        plt.savefig('../out/watermarking/plots/extractionerror/liutan/extractionerror_{}_liutan.eps'.format(name))
+        plt.savefig('../out/watermarking/plots/extractionerror/liutan/extractionerror_{}_liutan.eps'.format(name),bbox_inches='tight')
     if plottype == 2:
-        plt.savefig('../out/watermarking/plots/extractionerror/jain/extractionerror_{}_jain.eps'.format(name))
+        plt.savefig('../out/watermarking/plots/extractionerror/jain/extractionerror_{}_jain.eps'.format(name),bbox_inches='tight')
     if plottype == 3:
-        plt.savefig('../out/watermarking/plots/extractionerror/jainmod/extractionerror_{}_jain_mod.eps'.format(name))
+        plt.savefig('../out/watermarking/plots/extractionerror/jainmod/extractionerror_{}_jain_mod.eps'.format(name),bbox_inches='tight')
     plt.show()
