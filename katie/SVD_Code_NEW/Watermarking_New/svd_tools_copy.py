@@ -436,7 +436,7 @@ def modify_sigmas_log_s_rank_truncation(img, scalar, s, rank):
         S[i] = (math.log10(S[i]+1))**scalar
     S = np.diag(S)
     
-    img_modified_1 = U[:, :rank] @ np.diag(S[:rank]) @ VT[:rank, :]
+    img_modified_1 = U[:, :rank] @ S[:rank] @ VT[:rank, :]
     img_modified_1 = img_modified_1.reshape(img_rows,img_columns,-1)
     
     #identifying scaling values based on logarithmic mapping
