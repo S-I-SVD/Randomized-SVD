@@ -384,7 +384,6 @@ def modify_sigmas_log_s(img, scalar, s):
     
     img_type = img.dtype
     img = img.astype(np.float64)
-    img_original = img
     
     # Stack color channels
     img_rows, img_columns = img.shape[:2] 
@@ -410,7 +409,8 @@ def modify_sigmas_log_s(img, scalar, s):
             scaling_values[i] = s
   
     #scaling the original image according to the scaling values identified earlier
-    img_modified_2 = img
+    img_original = img.ravel()
+    img_modified_2 = np.empty_like(img_original)
     for i in range(0,len(img_modified_2)):
         img_modified_2[i] = img_original[i] * scaling_values[i]
     img_modified_2 = img_modified_2.reshape(img_rows, img_columns,-1)
