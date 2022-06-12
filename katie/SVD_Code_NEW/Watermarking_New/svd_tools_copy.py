@@ -419,11 +419,11 @@ def modify_sigmas_log_s(img, scalar, s):
 
 def modify_sigmas_log_s_rank_truncation(img, scalar, s, rank):
     
+    
     #logarithmic mapping (same as modify_sigmas_log)
     
     img_type = img.dtype
     img = img.astype(np.float64)
-    img_original = img
     
     # Stack color channels
     img_rows, img_columns = img.shape[:2] 
@@ -436,7 +436,7 @@ def modify_sigmas_log_s_rank_truncation(img, scalar, s, rank):
         S[i] = (math.log10(S[i]+1))**scalar
     S = np.diag(S)
     
-    modified_img_1 = U[:, :rank] @ np.diag(S[:rank]) @ VT[:rank, :]
+    img_modified_1 = U[:, :rank] @ np.diag(S[:rank]) @ VT[:rank, :]
     img_modified_1 = img_modified_1.reshape(img_rows,img_columns,-1)
     
     #identifying scaling values based on logarithmic mapping
@@ -449,7 +449,8 @@ def modify_sigmas_log_s_rank_truncation(img, scalar, s, rank):
             scaling_values[i] = s
   
     #scaling the original image according to the scaling values identified earlier
-    img_modified_2 = img
+    img_original = img.ravel()
+    img_modified_2 = np.empty_like(img_original)
     for i in range(0,len(img_modified_2)):
         img_modified_2[i] = img_original[i] * scaling_values[i]
     img_modified_2 = img_modified_2.reshape(img_rows, img_columns,-1)
