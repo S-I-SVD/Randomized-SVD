@@ -483,7 +483,7 @@ def lowrank_spectral_error_liutan(img, watermark, scale, rank):
     watermark_stacked_u, watermark_stacked_s, watermark_stacked_vh = np.linalg.svd(watermark_stacked)
     max_sv_watermark_stacked = watermark_stacked_s.max()
     #spectral norm difference
-    error = (max_sv_watermark_extracted_stacked-max_sv_watermark_stacked)/(max_sv_watermark_stacked)
+    error = (np.linalg.norm(max_sv_watermark_extracted_stacked-max_sv_watermark_stacked))/(np.linalg.norm(max_sv_watermark_stacked))
     return error
 
 def lowrank_spectral_extractionerror_plot_liutan(img,watermark):
