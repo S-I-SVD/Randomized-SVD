@@ -296,6 +296,13 @@ def padimage3d(img, smaller_image):
     #img_padded =  np.pad(img, [(0, new_shape[0] - img.shape[0]), (0, new_shape[1] - img.shape[1])] + [(0,0) for i in range(len(img.shape)) if i > 1])
     return padded_image
 
+def padimage3d_bottom_left(img, smaller_image):
+    #katie's function for cropping functions in watermark_experiemnts, three dimensional
+    padded_image = np.zeros(img.shape)
+    padded_image[smaller_image.shape[0]:,smaller_image.shape[1]:,smaller_image.shape[2]:smaller_image.shape[2]] = smaller_image
+    #img_padded =  np.pad(img, [(0, new_shape[0] - img.shape[0]), (0, new_shape[1] - img.shape[1])] + [(0,0) for i in range(len(img.shape)) if i > 1])
+    return padded_image
+
 
 def load_image(path, dtype=np.uint8):
     return np.asarray(Image.open(path)).astype(dtype)
