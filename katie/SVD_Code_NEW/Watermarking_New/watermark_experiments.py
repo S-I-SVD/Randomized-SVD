@@ -658,7 +658,7 @@ def crop_image_liutan(img, watermark, scale, number, side,name):
         cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
         
-    it.save_image(cropped_watermarked_image_padded,'../out/watermarking/cropping/embedding/liutan/embedding_{}_alpha_{}_cropped_{}_from_{}.png'.format(name,scale, number,side))
+    it.save_image(cropped_watermarked_image,'../out/watermarking/cropping/embedding/liutan/embedding_{}_alpha_{}_cropped_{}_from_{}.png'.format(name,scale, number,side))
         
 def crop_extract_watermark_liutan(img, watermark, scale, number, side,name):
     
@@ -676,7 +676,6 @@ def crop_extract_watermark_liutan(img, watermark, scale, number, side,name):
     elif side == 'top':
         cropped_watermarked_image = crop_top(img_watermarked, number)
         
-    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
     cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
     watermark_extracted = it.extract_watermark(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
             scale=scale)
@@ -708,7 +707,7 @@ def crop_image_jain(img, watermark, scale, number, side,name):
         cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
         
-    it.save_image(cropped_watermarked_image_padded,'../out/watermarking/cropping/embedding/jain/embedding_{}_alpha_{}_cropped_{}_from_{}.png'.format(name,scale, number,side))
+    it.save_image(cropped_watermarked_image,'../out/watermarking/cropping/embedding/jain/embedding_{}_alpha_{}_cropped_{}_from_{}.png'.format(name,scale, number,side))
  
 def crop_extract_watermark_jain(img, watermark, scale, number, side,name):
     img_watermarked, watermark_vh = it.embed_watermark_jain(img, watermark, scale=scale)
@@ -725,7 +724,6 @@ def crop_extract_watermark_jain(img, watermark, scale, number, side,name):
     elif side == 'top':
         cropped_watermarked_image = crop_top(img_watermarked, number)
         
-    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
     cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
     watermark_extracted = it.extract_watermark_jain(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
@@ -756,7 +754,7 @@ def crop_image_jain_mod(img, watermark, scale, number, side,name):
         cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
         
-    it.save_image(cropped_watermarked_image_padded,'../out/watermarking/cropping/embedding/jainmod/embedding_{}_alpha_{}_cropped_{}_from_{}.png'.format(name,scale, number,side))
+    it.save_image(cropped_watermarked_image,'../out/watermarking/cropping/embedding/jainmod/embedding_{}_alpha_{}_cropped_{}_from_{}.png'.format(name,scale, number,side))
 
  
 def crop_extract_watermark_jain_mod(img, watermark, scale, number, side,name):
@@ -774,7 +772,6 @@ def crop_extract_watermark_jain_mod(img, watermark, scale, number, side,name):
     elif side == 'top':
         cropped_watermarked_image = crop_top(img_watermarked, number)
         
-    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
     cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
     watermark_extracted = it.extract_watermark_jain_mod(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
