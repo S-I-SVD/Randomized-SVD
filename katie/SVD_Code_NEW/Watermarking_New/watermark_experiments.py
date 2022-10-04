@@ -643,7 +643,7 @@ def crop_image_liutan(img, watermark, scale, number, side,name):
     #img_stacked = img_stacked.astype(np.int32)
     if side == 'left':
         cropped_watermarked_image = crop_left(img_watermarked, number)
-        cropped_watermarked_image = it.padimage3d_bottom_left(img, cropped_watermarked_image)
+        cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
     elif side == 'right':
         cropped_watermarked_image = crop_right(img_watermarked, number)
@@ -651,7 +651,7 @@ def crop_image_liutan(img, watermark, scale, number, side,name):
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)     
     elif side == 'bottom':
         cropped_watermarked_image = crop_bottom(img_watermarked, number)
-        cropped_watermarked_image = it.padimage3d_bottom_left(img, cropped_watermarked_image)
+        cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
         cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)      
     elif side == 'top':
         cropped_watermarked_image = crop_top(img_watermarked, number)
