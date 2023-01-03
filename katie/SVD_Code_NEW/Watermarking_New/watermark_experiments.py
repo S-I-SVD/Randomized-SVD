@@ -619,7 +619,9 @@ def lowrank_extractionerror_plot_random_jain_mod(img,watermark):
 #cropping tests 
     
 def crop_left(img, number):
-    img = img[:,number:,:]
+    cropped_image = np.zeros(img.shape)  
+    cropped_image[:,number:,:] = img[:,number:,:]
+    img = cropped_image
     return img
 
 def crop_right(img, number):
@@ -631,7 +633,9 @@ def crop_bottom(img, number):
     return img
 
 def crop_top(img, number):
-    img = img[number:,:,:]
+    cropped_image = np.zeros(img.shape)  
+    cropped_image[number:,:,:] = img[number:,:,:]
+    img = cropped_image
     return img
 
 def crop_image_liutan(img, watermark, scale, number, side,name):
