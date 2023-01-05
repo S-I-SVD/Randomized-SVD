@@ -679,7 +679,8 @@ def crop_extract_watermark_liutan(img, watermark, scale, number, side,name):
         cropped_watermarked_image = crop_bottom(img_watermarked, number)
     elif side == 'top':
         cropped_watermarked_image = crop_top(img_watermarked, number)
-        
+    
+    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
     cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
     watermark_extracted = it.extract_watermark(cropped_watermarked_image_padded, watermarked_u, mat_s, watermarked_vh,
             scale=scale)
@@ -728,6 +729,7 @@ def crop_extract_watermark_jain(img, watermark, scale, number, side,name):
     elif side == 'top':
         cropped_watermarked_image = crop_top(img_watermarked, number)
         
+    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
     cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
     watermark_extracted = it.extract_watermark_jain(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
@@ -775,7 +777,8 @@ def crop_extract_watermark_jain_mod(img, watermark, scale, number, side,name):
         cropped_watermarked_image = crop_bottom(img_watermarked, number)
     elif side == 'top':
         cropped_watermarked_image = crop_top(img_watermarked, number)
-        
+    
+    cropped_watermarked_image = it.padimage3d(img, cropped_watermarked_image)
     cropped_watermarked_image_padded = cropped_watermarked_image.astype(np.int32)
     watermark_extracted = it.extract_watermark_jain_mod(cropped_watermarked_image_padded, img, watermark_vh, scale)
     watermark_extracted_final = reversepad(watermark_extracted, watermark)
